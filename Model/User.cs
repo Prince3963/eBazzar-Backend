@@ -12,7 +12,7 @@ namespace eBazzar.Model
         [Column ("UserName", TypeName = "varchar(50)")]
         public string? username { get; set; }
 
-        [EmailAddress]  //For email
+        [EmailAddress]
         [Column ("UserEmail", TypeName = "varchar(255)")]
         public string? email { get; set; }
         [Column ("UserMobile", TypeName = "int(20)")]

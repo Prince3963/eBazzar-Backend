@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using eBazzar.DTO;
 using eBazzar.Model;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,12 +16,12 @@ namespace eBazzar.Services
         }
 
         //Generate JWT function
-        public string generateJWT (User user)
+        public string generateJWT(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtToken:SecurityKey"]));
             var tokenHandelar = new JwtSecurityTokenHandler();
 
-            var claims = new []
+            var claims = new[]
             {
                 new Claim("user_id",user.user_id.ToString()),
                 new Claim("email",user.email)
@@ -38,5 +39,7 @@ namespace eBazzar.Services
             var token = tokenHandelar.CreateToken(tokenDescription);
             return tokenHandelar.WriteToken(token);
         }
+
+        
     }
 }

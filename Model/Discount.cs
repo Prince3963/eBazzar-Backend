@@ -7,18 +7,24 @@ namespace eBazzar.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("DiscountId", TypeName = "int(15)")]
         public int discount_id { get; set; }
-        [Column("TotalValue", TypeName = "int(50)")]
+        [Column("TotalValue", TypeName = "int")]
         public int? total_value { get; set; }
-        [Column("DiscountValidation", TypeName = "datetime(255)")]
-        public DateTime? expiration_time { get; set; } 
+        [Column("DiscountValidation", TypeName = "varchar(30)")]
+        public string? expiration_time { get; set; }
         [Column("DiscountIamge", TypeName = "varchar(255)")]
         public string? Iamge { get; set; }
         [Column("DiscountType", TypeName = "varchar(15)")]
         public string? discount_type { get; set; } = "flat";
 
-        [Column("createdAt")]
         public DateTime createdAt { get; set; } = DateTime.Now;
+
+        //Wishlist Navigation
+        [ForeignKey("wishlist_id")]
+        public int? wishlist_id { get; set; }
+
+        //Navigation Property
+        public ICollection<Payment>? payments { get; set; }
+
     }
 }

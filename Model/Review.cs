@@ -8,23 +8,22 @@ namespace eBazzar.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int review_id { get; set; }
-         public string? review_rate { get; set; }
+        [Column("ReviewRate", TypeName = "varchar(255)")]
+
+        public string? review_rate { get; set; }
+        [Column("ReviewText", TypeName = "varchar(255)")]
+
         public string? review_text { get; set; }
 
-        [Column("createdAt")]
         public DateTime createdAt { get; set; } = DateTime.Now;
 
 
-// User Navigatioins
-        public int user_id { get; set; }
+        // User Navigatioins
         [ForeignKey("user_id")]
+        public int? user_id { get; set; }
 
-        public User? User { get; set; }
-
-        // Product Navigation
-        public int product_id { get; set; }
+        //Product Navigation
         [ForeignKey("product_id")]
-
-        public Product? Product { get; set; }
+        public int? product_id { get; set; }
     }
 }

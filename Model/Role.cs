@@ -7,14 +7,14 @@ namespace eBazzar.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column ("RoleId", TypeName = "int(15)")]
         public int role_id { get; set; }
-        [Column ("Role", TypeName = "varrchar(50)")]
+
+        [Column("Role", TypeName = "varchar(50)")]
         public string? role { get; set; }
 
-        [Column("createdAt")]
-        public DateTime createdAt { get; set; } = DateTime.Now;
+        public DateTime? createdAt { get; set; } = DateTime.Now;
 
-
+        //Navigation property
+        public ICollection<User>? users { get; set; }
     }
 }

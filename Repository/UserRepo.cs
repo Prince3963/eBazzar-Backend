@@ -4,43 +4,54 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eBazzar.Repository
 {
-    public class UserRepo : IUser
+    public class UserRepo : IUserRepo
     {
-        private readonly UserDbContext userDbContext;
-        public UserRepo(UserDbContext _userDbContext)
+        private readonly AppDBContext dbContext;
+        public UserRepo(AppDBContext dbContext)
         {
-            this.userDbContext = _userDbContext;            
+            this.dbContext = dbContext;
         }
 
-        public async Task<User> addUser(User user)
+        public async Task addUser(User user)
         {
-            var newUser = new User
+            Console.WriteLine("repo: "+user.password);
+            try
             {
-                username = user.username,
-                email = user.email,
-                mobile = user.mobile,
-                password = BCrypt.Net.BCrypt.HashPassword(user.password)
-            };
-            await userDbContext.AddAsync(newUser);
-            await userDbContext.SaveChangesAsync();
-            return newUser;
+                await dbContext.AddAsync(user);
+                await dbContext.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Failed to add User " + e);
+            }
         }
 
-        public async Task<User> loginUser(User user)
+        public async Task<User> getUserById(int user_id)
         {
-            var existUser = await userDbContext.users.FirstOrDefaultAsync(u => u.email == user.email );
+            var existUser = await dbContext.users.FirstOrDefaultAsync(u => u.user_id == user_id);
+            if (existUser == null)
+            {
+                return null;
+            }
+            return existUser;
+        }
+
+        public async Task loginUser(User user)
+        {
+            var existUser = await dbContext.users.FirstOrDefaultAsync(u => u.email == user.email);
             if (existUser == null)
             {
                 Console.WriteLine("User not found");
-            //Console.WriteLine(existUser.email, existUser.password);
             }
             if (!BCrypt.Net.BCrypt.Verify(user.password, existUser.password))
             {
                 Console.WriteLine("Invalid password");
             }
-            return existUser;
         }
 
-         //|| !BCrypt.Net.BCrypt.Verify(user.password, existUser.password)
+        public async Task<List<User>> viewUser()
+        {
+            return await dbContext.users.ToListAsync();
+        }
     }
 }

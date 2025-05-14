@@ -7,25 +7,33 @@ namespace eBazzar.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column ("UserId", TypeName = "int(15)")]
         public int user_id { get; set; }
-        [Column ("UserName", TypeName = "varchar(50)")]
+        [Column("UserName", TypeName = "varchar(50)")]
         public string? username { get; set; }
 
         [EmailAddress]
-        [Column ("UserEmail", TypeName = "varchar(255)")]
+        [Column("UserEmail", TypeName = "varchar(255)")]
         public string? email { get; set; }
-        [Column ("UserMobile", TypeName = "int(20)")]
+        [Column("UserMobile", TypeName = "varchar(12)")]
         public string? mobile { get; set; }
-        [Column ("UserPassword", TypeName = "varchar(50)")]
+        [Column("UserPassword", TypeName = "varchar(250)")]
         public string? password { get; set; }
 
-        [Column("createdAt")]
         public DateTime createdAt { get; set; } = DateTime.Now;
 
         //Role Navigation
         [ForeignKey("role_id")]
         public int? role_id { get; set; }
-        public Role? Role { get; set; }
+
+        //Product Navigation
+        [ForeignKey("product_id")]
+        public int? product_id { get; set; }    
+
+
+        ////Navigation Property
+        public ICollection<Wishlist>? wishlists { get; set; }
+        public ICollection<Review>? reviews { get; set; }
+        public ICollection<Order>? orders { get; set; }
+        public ICollection<Payment>? payments { get; set; }
     }
 }

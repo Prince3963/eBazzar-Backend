@@ -8,14 +8,15 @@ namespace eBazzar.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
-        [Column("Category_Id", TypeName = "int(15)")]
         public int category_id { get; set; }
         [Column("CategoryName", TypeName = "varchar(50)")]
         public string? category_name { get; set; }
-        [Column("CategoryDescription", TypeName = "varchar(750)")]
+        [Column("CategoryDescription", TypeName = "varchar(500)")]
         public string? category_description { get; set; }
 
-        [Column("createdAt")]
         public DateTime createdAt { get; set; } = DateTime.Now;
+
+        //Navigation property 
+        public ICollection<Product>? products { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace eBazzar.Migrations
                     role_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Role = table.Column<string>(type: "varchar(50)", nullable: true),
-                    //createdAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    createdAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,26 +75,20 @@ namespace eBazzar.Migrations
                     UserName = table.Column<string>(type: "varchar(50)", nullable: true),
                     UserEmail = table.Column<string>(type: "varchar(255)", nullable: true),
                     UserMobile = table.Column<string>(type: "varchar(12)", nullable: true),
-                    UserPassword = table.Column<string>(type: "varchar(50)", nullable: true),
+                    UserPassword = table.Column<string>(type: "varchar(250)", nullable: true),
+                    forgotPasswordToken = table.Column<string>(type: "varchar(255)", nullable: true),
+                    tokanExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    role_id = table.Column<int>(type: "int", nullable: true),
-                    product_id = table.Column<int>(type: "int", nullable: true),
-                    product_id1 = table.Column<int>(type: "int", nullable: true),
-                    role_id1 = table.Column<int>(type: "int", nullable: true)
+                    product_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_users", x => x.user_id);
                     table.ForeignKey(
-                        name: "FK_users_products_product_id1",
-                        column: x => x.product_id1,
+                        name: "FK_users_products_product_id",
+                        column: x => x.product_id,
                         principalTable: "products",
                         principalColumn: "product_id");
-                    table.ForeignKey(
-                        name: "FK_users_roles_role_id1",
-                        column: x => x.role_id1,
-                        principalTable: "roles",
-                        principalColumn: "role_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -299,14 +293,9 @@ namespace eBazzar.Migrations
                 column: "user_id1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_product_id1",
+                name: "IX_users_product_id",
                 table: "users",
-                column: "product_id1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_users_role_id1",
-                table: "users",
-                column: "role_id1");
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_wishlists_user_id1",
@@ -327,6 +316,9 @@ namespace eBazzar.Migrations
                 name: "reviews");
 
             migrationBuilder.DropTable(
+                name: "roles");
+
+            migrationBuilder.DropTable(
                 name: "orders");
 
             migrationBuilder.DropTable(
@@ -340,9 +332,6 @@ namespace eBazzar.Migrations
 
             migrationBuilder.DropTable(
                 name: "products");
-
-            migrationBuilder.DropTable(
-                name: "roles");
 
             migrationBuilder.DropTable(
                 name: "categories");

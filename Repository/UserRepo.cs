@@ -1,5 +1,6 @@
 ﻿using eBazzar.DBcontext;
 using eBazzar.Model;
+using eBazzar.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace eBazzar.Repository
@@ -14,7 +15,7 @@ namespace eBazzar.Repository
 
         public async Task addUser(User user)
         {
-            Console.WriteLine("repo: "+user.password);
+            //Console.WriteLine("repo: "+user.password);
             try
             {
                 await dbContext.AddAsync(user);
@@ -23,6 +24,7 @@ namespace eBazzar.Repository
             catch(Exception e)
             {
                 Console.WriteLine("Failed to add User " + e);
+                throw;
             }
         }
 
@@ -35,23 +37,27 @@ namespace eBazzar.Repository
             }
             return existUser;
         }
-
-        public async Task loginUser(User user)
+        
+        public async Task<User> getUserByEmail(string email)
         {
-            var existUser = await dbContext.users.FirstOrDefaultAsync(u => u.email == user.email);
-            if (existUser == null)
-            {
-                Console.WriteLine("User not found");
-            }
-            if (!BCrypt.Net.BCrypt.Verify(user.password, existUser.password))
-            {
-                Console.WriteLine("Invalid password");
-            }
+            var existEmail = await dbContext.users.FirstOrDefaultAsync(u => u.email == email);
+            return existEmail;
         }
 
         public async Task<List<User>> viewUser()
         {
             return await dbContext.users.ToListAsync();
+        }
+
+        public async Task updatePassword(User user)
+        {
+            dbContext.users.Update(user);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public Task<User> UserToken(string forgotPaswordToken)
+        {
+            return dbContext.users.FirstOrDefaultAsync(u => u.forgotPasswordToken == forgotPaswordToken);
         }
     }
 }

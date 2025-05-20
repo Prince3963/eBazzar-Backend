@@ -1,11 +1,12 @@
-﻿using CloudinaryDotNet.Actions;
+﻿
 using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 public interface ICloudinaryService
 {
     Task<string> uploadImages(IFormFile file);
 }
-//THis is code file which contain both Interface and Class
+
 public class CloudinaryService : ICloudinaryService
 {
     private readonly Cloudinary cloudinary;
@@ -20,20 +21,18 @@ public class CloudinaryService : ICloudinaryService
     }
     public async Task<string> uploadImages(IFormFile file)
     {
-        Console.WriteLine("file received in CloudinaryService: " + file?.FileName);
+        //Console.WriteLine("file received in CloudinaryService: " + file?.FileName);
 
         if (file == null)
         {
-            Console.WriteLine("ERROR: No file was received.");
-            return "Error: No file was received.";
+            Console.WriteLine("ERROR: No file was received." + file);
+            return null;
         }
-
-        //Error: No file was received.
 
         if (file.Length == 0)
         {
             Console.WriteLine("ERROR: Uploaded file is empty.");
-            return "Error: Uploaded file is empty.";
+            return null;
         }
 
         try

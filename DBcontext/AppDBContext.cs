@@ -7,7 +7,7 @@ namespace eBazzar.DBcontext
     {
         public AppDBContext(DbContextOptions <AppDBContext> options) : base(options)
         {
-            //Add category in Product
+            
         }
 
         public DbSet<User> users { get; set; }

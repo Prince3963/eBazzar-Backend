@@ -13,21 +13,27 @@ namespace eBazzar.Model
 
         [EmailAddress]
         [Column("UserEmail", TypeName = "varchar(255)")]
+
         public string? email { get; set; } 
         [Column("UserMobile", TypeName = "varchar(12)")]
         public string? mobile { get; set; }
         [Column("UserPassword", TypeName = "varchar(250)")]
         public string? password { get; set; }
 
+        [Column("forgotPasswordToken", TypeName = "varchar(255)")]
+        public string? forgotPasswordToken { get; set; } = null;
+
+        [Column("tokanExpirationTime")]
+        public DateTime? tokenExpirationTime { get; set; }
         public DateTime createdAt { get; set; } = DateTime.Now;
 
         //Role Navigation
-        [ForeignKey("role_id")]
-        public int? role_id { get; set; }
+        //[ForeignKey("role_id")]
+        //public int? role_id { get; set; }
 
         //Product Navigation
-        [ForeignKey("product_id")]
-        public int? product_id { get; set; }    
+        //[ForeignKey("product_id")]
+        //public int? product_id { get; set; }    
 
 
         ////Navigation Property

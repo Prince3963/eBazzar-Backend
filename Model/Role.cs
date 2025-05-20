@@ -15,6 +15,6 @@ namespace eBazzar.Model
         public DateTime? createdAt { get; set; } = DateTime.Now;
 
         //Navigation property
-        public ICollection<User>? users { get; set; }
+        //public ICollection<User>? users { get; set; }
     }
 }

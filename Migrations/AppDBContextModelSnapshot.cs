@@ -334,6 +334,10 @@ namespace eBazzar.Migrations
                         .HasColumnType("varchar(255)")
                         .HasColumnName("UserEmail");
 
+                    b.Property<string>("forgotPasswordToken")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("forgotPasswordToken");
+
                     b.Property<string>("mobile")
                         .HasColumnType("varchar(12)")
                         .HasColumnName("UserMobile");
@@ -345,14 +349,9 @@ namespace eBazzar.Migrations
                     b.Property<int?>("product_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("product_id1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("role_id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("role_id1")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("tokenExpirationTime")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("tokanExpirationTime");
 
                     b.Property<string>("username")
                         .HasColumnType("varchar(50)")
@@ -360,9 +359,7 @@ namespace eBazzar.Migrations
 
                     b.HasKey("user_id");
 
-                    b.HasIndex("product_id1");
-
-                    b.HasIndex("role_id1");
+                    b.HasIndex("product_id");
 
                     b.ToTable("users");
                 });
@@ -449,11 +446,7 @@ namespace eBazzar.Migrations
                 {
                     b.HasOne("eBazzar.Model.Product", null)
                         .WithMany("users")
-                        .HasForeignKey("product_id1");
-
-                    b.HasOne("eBazzar.Model.Role", null)
-                        .WithMany("users")
-                        .HasForeignKey("role_id1");
+                        .HasForeignKey("product_id");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Wishlist", b =>
@@ -484,11 +477,6 @@ namespace eBazzar.Migrations
 
                     b.Navigation("reviews");
 
-                    b.Navigation("users");
-                });
-
-            modelBuilder.Entity("eBazzar.Model.Role", b =>
-                {
                     b.Navigation("users");
                 });
 

@@ -27,6 +27,7 @@ builder.Services.AddScoped<IUsers, UserServices>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<IServiceProduct, ProductService>();
 builder.Services.AddScoped<IProduct, ProductRepo>();
+builder.Services.AddScoped<IEmailService, EmailService>() ;
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 builder.Services.AddScoped<ICategoryService, CategoryServices>();
 builder.Services.AddScoped <ICloudinaryService, CloudinaryService>();

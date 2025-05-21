@@ -50,45 +50,7 @@ namespace eBazzar.Services
             return response;
         }
 
-        public async Task<ServiceResponse<string>> ForgotPasswrod(ForgotPasswordDTO forgotPassword)
-        {
-            var response = new ServiceResponse<string>();
-            var existEmail = await userRepo.UserToken(forgotPassword.forgotPasswordToken);
-
-            if (existEmail == null)
-            {
-                response.data = "0";
-                response.message = "Invalid token.";
-                response.status = false;
-                return response;
-            }
-
-            if (DateTime.Now > existEmail.tokenExpirationTime)
-            {
-                response.data = "0";
-                response.message = "Token has expired.";
-                response.status = false;
-                return response;
-            }
-
-            if (forgotPassword.forgotPasswordToken != existEmail.forgotPasswordToken)
-            {
-                response.data = "0";
-                response.message = "Invalid token.";
-                response.status = false;
-                return response;
-            }
-
-            existEmail.password = BCrypt.Net.BCrypt.HashPassword(forgotPassword.forgotPasswordToken);
-            await userRepo.updatePassword(existEmail);
-
-            response.data = "1";
-            response.message = "Password reset successfully.";
-            response.status = true;
-
-            return response;
-
-        }
+        
 
         public async Task<ServiceResponse<string>> loginUser(LoginDTO loginDTO)
         {
@@ -147,6 +109,45 @@ namespace eBazzar.Services
             return response;
         }
 
+        public async Task<ServiceResponse<string>> ForgotPasswrod(ForgotPasswordDTO forgotPassword)
+        {
+            var response = new ServiceResponse<string>();
+            var existEmail = await userRepo.UserToken(forgotPassword.forgotPasswordToken);
+
+            if (existEmail == null)
+            {
+                response.data = "0";
+                response.message = "Invalid token.";
+                response.status = false;
+                return response;
+            }
+
+            if (DateTime.Now > existEmail.tokenExpirationTime)
+            {
+                response.data = "0";
+                response.message = "Token has expired.";
+                response.status = false;
+                return response;
+            }
+
+            if (forgotPassword.forgotPasswordToken != existEmail.forgotPasswordToken)
+            {
+                response.data = "0";
+                response.message = "Invalid token.";
+                response.status = false;
+                return response;
+            }
+
+            existEmail.password = BCrypt.Net.BCrypt.HashPassword(forgotPassword.forgotPassword);
+            await userRepo.updatePassword(existEmail);
+
+            response.data = "1";
+            response.message = "Password reset successfully.";
+            response.status = true;
+
+            return response;
+
+        }
         public async Task<List<UserDTO>> viewUser()
         {
             var result = await userRepo.viewUser();

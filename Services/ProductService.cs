@@ -42,7 +42,8 @@ namespace eBazzar.Services
                     product_price = productDTO.product_price,
                     product_image = imageURL,
                     product_isActive = productDTO.product_isActive,
-                    category_id = productDTO.category_id
+                    //category_id = productDTO.category_id
+                    //Category = productDTO.category_name
                 };
 
                 var newProduct = await iproduct.addProduct(existProduct);
@@ -136,7 +137,8 @@ namespace eBazzar.Services
                 product_price = p.product_price,
                 product_imageURL = p.product_image,
                 product_isActive = p.product_isActive,
-                category_id = p.category_id
+                //category_id = p.category_id,
+                category_name = p.Category?.category_name
             }).ToList();
         }
     }

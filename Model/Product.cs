@@ -31,11 +31,11 @@ namespace eBazzar.Model
         [ForeignKey("category_id")]
         public int? category_id { get; set; }
 
-
-
         //Navigation Property
         public ICollection<Review>? reviews { get; set; }
         public ICollection<OrderDetails>? orderDetails { get; set; }
         public ICollection<User>? users { get; set; }
+        public Category? Category { get; set; }
+
     }
 }

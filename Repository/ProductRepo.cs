@@ -62,7 +62,7 @@ namespace eBazzar.Repository
 
         public async Task<List<Product>> viewProduct()
         {
-            return await dBContext.products.ToListAsync();
+            return await dBContext.products.Include(p => p.Category).ToListAsync();
         }
 
 

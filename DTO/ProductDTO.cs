@@ -13,6 +13,7 @@ namespace eBazzar.DTO
         public string? product_imageURL { get; set; }
         public string? product_isActive { get; set; }
         public int? category_id { get; set; }
+        public string? category_name { get; set; }
     }
 
 }

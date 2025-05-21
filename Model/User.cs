@@ -27,13 +27,7 @@ namespace eBazzar.Model
         public DateTime? tokenExpirationTime { get; set; }
         public DateTime createdAt { get; set; } = DateTime.Now;
 
-        //Role Navigation
-        //[ForeignKey("role_id")]
-        //public int? role_id { get; set; }
-
-        //Product Navigation
-        //[ForeignKey("product_id")]
-        //public int? product_id { get; set; }    
+        
 
 
         ////Navigation Property

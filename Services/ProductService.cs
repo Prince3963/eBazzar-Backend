@@ -42,8 +42,8 @@ namespace eBazzar.Services
                     product_price = productDTO.product_price,
                     product_image = imageURL,
                     product_isActive = productDTO.product_isActive,
-                    //category_id = productDTO.category_id
-                    //Category = productDTO.category_name
+                    category_id = productDTO.category_id
+
                 };
 
                 var newProduct = await iproduct.addProduct(existProduct);
@@ -63,10 +63,37 @@ namespace eBazzar.Services
             }
         }
 
-        public Task<ProductDTO> deleteProduct(ProductDTO productDTO)
+        public async Task<ServiceResponse<string>> deleteProduct(int product_id)
         {
-            throw new NotImplementedException();
+            var resultResponse = new ServiceResponse<string>();
+
+            if (product_id == null)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = "Product Id is requierd";
+                resultResponse.status = false;
+
+                return resultResponse;
+            }
+
+            var existingProduct = await iproduct.deleteProductById(product_id);
+            if (existingProduct == null)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = "Product not found";
+                resultResponse.status = false;
+            }
+            else
+            {
+                resultResponse.data = "1";
+                resultResponse.message = "Product deleted successfully";
+                resultResponse.status = true;
+            }
+
+            return resultResponse;
+
         }
+
 
         public async Task<ServiceResponse<string>> updateProduct(ProductDTO productDTO, int product_id)
         {
@@ -85,7 +112,7 @@ namespace eBazzar.Services
                 }
                 else
                 {
-                    
+
                     string? imageURL = null;
                     if (productDTO.product_image != null)
                     {
@@ -107,6 +134,7 @@ namespace eBazzar.Services
                         product_image = imageURL,
                         product_isActive = productDTO.product_isActive,
                         category_id = productDTO.category_id,
+
                     };
 
                     await iproduct.updateProduct(updatedProduct, product_id);
@@ -125,6 +153,26 @@ namespace eBazzar.Services
             }
         }
 
+        public async Task<ProductDTO?> getProductById(int product_id)
+        {
+            var product = await iproduct.getProductById(product_id);
+
+            if (product == null)
+                return null;
+
+            return new ProductDTO
+            {
+                product_id = product.product_id,
+                product_name = product.product_name,
+                product_description = product.product_description,
+                product_price = product.product_price,
+                product_imageURL = product.product_image,
+                product_isActive = product.product_isActive,
+                category_id = product.category_id,
+                category_name = product.Category?.category_name
+            };
+        }
+
         public async Task<List<ProductDTO>> viewProduct()
         {
             var result = await iproduct.viewProduct(); // fetch from repo
@@ -137,7 +185,6 @@ namespace eBazzar.Services
                 product_price = p.product_price,
                 product_imageURL = p.product_image,
                 product_isActive = p.product_isActive,
-                //category_id = p.category_id,
                 category_name = p.Category?.category_name
             }).ToList();
         }
@@ -151,28 +198,6 @@ namespace eBazzar.Services
 
 
 
-//public async Task<ProductDTO> deleteProduct(ProductDTO productDTO)
-//{
-//    try
-//    {
-//         var response = 
-//    }
-//var product = new Product
-//{
-//    product_id = productDTO.product_id ?? 0, // ensure id is present
-//    product_name = productDTO.product_name,
-//    product_description = productDTO.product_description,
-//    product_price = productDTO.product_price,
-//    product_image = productDTO.product_image,
-//    product_isActive = productDTO.product_isActive
-//};
-
-//var deleteProduct = await iproduct.deleteProduct(product);
-//return new ProductDTO
-//{
-//    product_id = deleteProduct.product_id
-//};
-//} 
 
 
 
@@ -180,4 +205,4 @@ namespace eBazzar.Services
 
 
 
-    
+

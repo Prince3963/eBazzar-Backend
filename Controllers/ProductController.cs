@@ -24,6 +24,20 @@ namespace eBazzar.Controllers
             return Ok(await iserviceProduct.viewProduct());
         }
 
+        [HttpGet]
+        [Route("getProductById/{product_id}")]
+        public async Task<IActionResult> getProductById(int product_id)
+        {
+            var result = await iserviceProduct.getProductById(product_id);
+
+            if (result == null)
+            {
+                return NotFound(new { message = "Product not found in Controller", status = false });
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("addProduct")]
         public async Task<IActionResult> addProduct([FromForm] ProductDTO productDTO)
@@ -49,10 +63,10 @@ namespace eBazzar.Controllers
         }
 
         [HttpDelete]
-        [Route("deleteProduct")]
-        public async Task<IActionResult> deleteProduct(ProductDTO productDTO)
+        [Route("deleteProduct/{product_id}")]
+        public async Task<IActionResult> deleteProduct(int product_id)
         {
-            var result = await iserviceProduct.deleteProduct(productDTO);
+            var result = await iserviceProduct.deleteProduct(product_id);
             return Ok(result);
         }
     }

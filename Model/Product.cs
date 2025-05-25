@@ -25,17 +25,16 @@ namespace eBazzar.Model
         [Column("createdAt")]
         public DateTime createdAt { get; set; } = DateTime.Now;
 
-        
-
-        //Category Navigation
-        [ForeignKey("category_id")]
         public int? category_id { get; set; }
+
+        [ForeignKey("category_id")]
+        public Category? Category { get; set; }
+
 
         //Navigation Property
         public ICollection<Review>? reviews { get; set; }
         public ICollection<OrderDetails>? orderDetails { get; set; }
         public ICollection<User>? users { get; set; }
-        public Category? Category { get; set; }
 
     }
 }

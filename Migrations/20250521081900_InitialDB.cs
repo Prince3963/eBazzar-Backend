@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace eBazzar.Migrations
 {
     /// <inheritdoc />
-    public partial class newMigration : Migration
+    public partial class InitialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,15 +53,14 @@ namespace eBazzar.Migrations
                     ProductisActive = table.Column<string>(type: "varchar(10)", nullable: true),
                     ProductSlug = table.Column<string>(type: "varchar(255)", nullable: true),
                     createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    category_id = table.Column<int>(type: "int", nullable: true),
-                    category_id1 = table.Column<int>(type: "int", nullable: true)
+                    category_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_products", x => x.product_id);
                     table.ForeignKey(
-                        name: "FK_products_categories_category_id1",
-                        column: x => x.category_id1,
+                        name: "FK_products_categories_category_id",
+                        column: x => x.category_id,
                         principalTable: "categories",
                         principalColumn: "category_id");
                 });
@@ -278,9 +277,9 @@ namespace eBazzar.Migrations
                 column: "user_id1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_category_id1",
+                name: "IX_products_category_id",
                 table: "products",
-                column: "category_id1");
+                column: "category_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_reviews_product_id1",

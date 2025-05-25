@@ -54,6 +54,7 @@ namespace eBazzar.Repository
             result.product_image = product.product_image;
             result.product_isActive = product.product_isActive;
             result.category_id = product.category_id;
+            result.Category = product.Category;
 
             await dBContext.SaveChangesAsync();
             return result;
@@ -75,5 +76,20 @@ namespace eBazzar.Repository
             }
             return existProduct;
         }
+
+        public async Task<Product?> deleteProductById(int product_id)
+        {
+            var existingProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);
+
+            if (existingProduct == null)
+            {
+                return null;
+            }
+
+            dBContext.products.Remove(existingProduct);
+            await dBContext.SaveChangesAsync();
+            return existingProduct;
+        }
+
     }
 }

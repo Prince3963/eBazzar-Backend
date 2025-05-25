@@ -221,9 +221,6 @@ namespace eBazzar.Migrations
                     b.Property<int?>("category_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("category_id1")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("createdAt");
@@ -254,7 +251,7 @@ namespace eBazzar.Migrations
 
                     b.HasKey("product_id");
 
-                    b.HasIndex("category_id1");
+                    b.HasIndex("category_id");
 
                     b.ToTable("products");
                 });
@@ -426,9 +423,11 @@ namespace eBazzar.Migrations
 
             modelBuilder.Entity("eBazzar.Model.Product", b =>
                 {
-                    b.HasOne("eBazzar.Model.Category", null)
+                    b.HasOne("eBazzar.Model.Category", "Category")
                         .WithMany("products")
-                        .HasForeignKey("category_id1");
+                        .HasForeignKey("category_id");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Review", b =>

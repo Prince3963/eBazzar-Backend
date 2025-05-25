@@ -1,4 +1,5 @@
 ﻿using eBazzar.DBcontext;
+using eBazzar.DTO;
 using eBazzar.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,6 @@ namespace eBazzar.Repository
             await dBContext.products.AddAsync(product);
             await dBContext.SaveChangesAsync();
             return product;
-
         }
 
         public async Task<Product> deleteProduct(Product product)
@@ -91,5 +91,18 @@ namespace eBazzar.Repository
             return existingProduct;
         }
 
+        public async Task<Product> updateProductStatus(int product_id, ProductStatusDTO productStatusDTO)
+        {
+            var updateProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);
+            if (updateProduct == null)
+            {
+                return null;
+            }
+
+            updateProduct.product_isActive = productStatusDTO.product_isActive;
+
+            await dBContext.SaveChangesAsync();
+            return updateProduct; 
+        }
     }
 }

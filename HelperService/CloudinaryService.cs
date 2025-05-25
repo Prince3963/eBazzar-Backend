@@ -21,18 +21,23 @@ public class CloudinaryService : ICloudinaryService
     }
     public async Task<string> uploadImages(IFormFile file)
     {
-        //Console.WriteLine("file received in CloudinaryService: " + file?.FileName);
-
         if (file == null)
         {
-            Console.WriteLine("ERROR: No file was received." + file);
-            return null;
+            Console.WriteLine("ERROR: No file was received.");
+            return "Error: No file was received.";
         }
 
         if (file.Length == 0)
         {
             Console.WriteLine("ERROR: Uploaded file is empty.");
-            return null;
+            return "Error: Uploaded file is empty.";
+        }
+
+        // Check file type
+        if (!file.ContentType.StartsWith("image"))
+        {
+            Console.WriteLine("ERROR: Invalid file type.");
+            return "Error: Invalid file type.";
         }
 
         try
@@ -47,13 +52,14 @@ public class CloudinaryService : ICloudinaryService
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
-                if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK || string.IsNullOrEmpty(uploadResult.SecureUrl?.ToString()))
+                if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     Console.WriteLine("ERROR: Cloudinary upload failed. Status: " + uploadResult.StatusCode);
+                    Console.WriteLine("Error message: " + uploadResult.Error?.Message);
                     return "Error: Cloudinary upload failed.";
                 }
 
-                return uploadResult.SecureUrl.ToString();
+                return uploadResult.SecureUrl?.ToString() ?? "Error: Secure URL is empty.";
             }
         }
         catch (Exception ex)
@@ -62,5 +68,6 @@ public class CloudinaryService : ICloudinaryService
             return "Error: Exception occurred during upload - " + ex.Message;
         }
     }
+
 
 }

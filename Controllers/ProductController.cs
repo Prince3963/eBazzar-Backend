@@ -1,4 +1,4 @@
-﻿    using eBazzar.DTO;
+﻿using eBazzar.DTO;
 using eBazzar.Model;
 using eBazzar.Repository;
 using eBazzar.Services;
@@ -58,6 +58,22 @@ namespace eBazzar.Controllers
             catch (Exception e)
             {
                 Console.WriteLine("Please check your product controller" + e);
+                return NotFound();
+            }
+        }
+
+        [HttpPatch]
+        [Route("updateProductStatus/{product_id}")]
+        public async Task<IActionResult> productStatus(int product_id, [FromForm] ProductStatusDTO productStatusDTO)
+        {
+            try
+            {
+                var result = await iserviceProduct.toggleStatus(productStatusDTO, product_id);
+                return Ok(result);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Please check your Controller "+e);
                 return NotFound();
             }
         }

@@ -112,7 +112,6 @@ namespace eBazzar.Services
                 }
                 else
                 {
-
                     string? imageURL = null;
                     if (productDTO.product_image != null)
                     {
@@ -188,21 +187,33 @@ namespace eBazzar.Services
                 category_name = p.Category?.category_name
             }).ToList();
         }
+
+        public async Task<ServiceResponse<string>> toggleStatus(ProductStatusDTO productStatusDTO, int product_id)
+        {
+            var resultResponse = new ServiceResponse<string>();
+            try
+            {
+                var updateProductStatus = await iproduct.updateProductStatus(product_id, productStatusDTO);
+                resultResponse.data = "1";
+                resultResponse.message = $"Product status updated to {updateProductStatus.product_isActive}.";
+                resultResponse.status = true;
+
+                return resultResponse;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = ex.Message;
+                resultResponse.status = false;
+                return resultResponse;
+            }
+            catch (Exception)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = "Product is not found";
+                resultResponse.status = false;
+                return resultResponse;
+            }
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

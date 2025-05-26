@@ -25,6 +25,26 @@ namespace eBazzar.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("getUserData/{user_id}")]
+        public async Task<IActionResult> getProfileData(int user_id)
+        {
+            var result = await iuser.getDataById(user_id);
+            if (result == null)
+            {
+                return NotFound("User not found");      
+            }
+            return Ok(result);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> updateProfile(int user_id,[FromQuery] ProfileUpdateDTO profileUpdateDTO)
+        {
+            var result = await iuser.updateUserProfile(user_id, profileUpdateDTO);
+            return Ok(result);
+        }
+
         [HttpPost]
         [Route("ForgotPassword")]
         public async Task<IActionResult> forgotPassword([FromForm] ForgotEmailDTO forgotEmail)

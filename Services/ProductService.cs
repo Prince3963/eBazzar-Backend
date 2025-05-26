@@ -25,6 +25,8 @@ namespace eBazzar.Services
                 var resultResponse = new ServiceResponse<string>();
                 var imageURL = await cloudinaryService.uploadImages(productDTO.product_image);
 
+                Console.WriteLine("img: " + imageURL);
+
                 Console.WriteLine("Received file: " + productDTO.product_image?.FileName);
 
                 if (imageURL == null)

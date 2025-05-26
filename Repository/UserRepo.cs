@@ -59,5 +59,11 @@ namespace eBazzar.Repository
         {
             return dbContext.users.FirstOrDefaultAsync(u => u.forgotPasswordToken == forgotPaswordToken);
         }
+
+        public async Task updateUser(User user)
+        {
+            dbContext.users.Update(user);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

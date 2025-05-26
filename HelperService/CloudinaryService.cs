@@ -1,5 +1,4 @@
-﻿
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 
 public interface ICloudinaryService
@@ -18,28 +17,33 @@ public class CloudinaryService : ICloudinaryService
 
         var account = new Account(cloudName, apiKey, apiSecret);
         cloudinary = new Cloudinary(account);
+
+        if (string.IsNullOrEmpty(cloudName) || string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(apiSecret))
+        {
+            Console.WriteLine("ERROR: Cloudinary credentials are missing or invalid.");
+        }
     }
     public async Task<string> uploadImages(IFormFile file)
     {
+        Console.WriteLine("file received in CloudinaryService: " + file?.FileName);
+
         if (file == null)
         {
             Console.WriteLine("ERROR: No file was received.");
-            return "Error: No file was received.";
+            return null;
         }
 
         if (file.Length == 0)
         {
             Console.WriteLine("ERROR: Uploaded file is empty.");
-            return "Error: Uploaded file is empty.";
+            return null;
         }
 
-        // Check file type
-        if (!file.ContentType.StartsWith("image"))
+        if (file.Length > 10 * 1024 * 1024)  // Max size 10MB
         {
-            Console.WriteLine("ERROR: Invalid file type.");
-            return "Error: Invalid file type.";
+            Console.WriteLine("ERROR: File is too large.");
+            return null;
         }
-
         try
         {
             using (var stream = file.OpenReadStream())
@@ -47,19 +51,19 @@ public class CloudinaryService : ICloudinaryService
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    Transformation = new Transformation().Width(250).Height(250).Crop("fill")
+                    //Transformation = new Transformation().Width(250).Height(250).Crop("fill")
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
 
-                if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK)
+                if (uploadResult.StatusCode != System.Net.HttpStatusCode.OK || string.IsNullOrEmpty(uploadResult.SecureUrl?.ToString()))
                 {
                     Console.WriteLine("ERROR: Cloudinary upload failed. Status: " + uploadResult.StatusCode);
                     Console.WriteLine("Error message: " + uploadResult.Error?.Message);
-                    return "Error: Cloudinary upload failed.";
+                    return null;
                 }
-
-                return uploadResult.SecureUrl?.ToString() ?? "Error: Secure URL is empty.";
+                
+                return uploadResult.SecureUrl.ToString();
             }
         }
         catch (Exception ex)
@@ -69,5 +73,5 @@ public class CloudinaryService : ICloudinaryService
         }
     }
 
-
 }
+

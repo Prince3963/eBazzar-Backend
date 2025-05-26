@@ -1,8 +1,11 @@
-﻿using eBazzar.DTO;
+﻿using BCrypt.Net;
+using eBazzar.DTO;
 using eBazzar.HelperService;
 using eBazzar.Model;
 
 using eBazzar.Repository;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace eBazzar.Services
 {
@@ -50,7 +53,9 @@ namespace eBazzar.Services
             return response;
         }
 
-        
+        //Get Company Profile
+
+
 
         public async Task<ServiceResponse<string>> loginUser(LoginDTO loginDTO)
         {
@@ -148,6 +153,45 @@ namespace eBazzar.Services
             return response;
 
         }
+
+        public async Task<ServiceResponse<string>> updateUserProfile(int id, ProfileUpdateDTO profileUpdateDTO)
+        {
+            var resultResponse = new ServiceResponse<string>();
+
+            //user ni id lidhi ane check kari a exist 6e k ni 
+            var updateProfile = await userRepo.getUserById(id);
+
+            //Jo exist ni hoy to 
+            if (updateProfile == null)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = "User not found";
+                resultResponse.status = false;
+
+                return resultResponse;
+            }
+
+            //Exist hoi to 
+            //Mtlb agar profileUpdateDTO.username null nahi he to yahi value updateProfile.username ko assign ki jayegi bydefault
+            updateProfile.username = profileUpdateDTO.username ?? updateProfile.username;
+            updateProfile.email = profileUpdateDTO.email ?? updateProfile.email;
+            updateProfile.mobile = profileUpdateDTO.mobile ?? updateProfile.mobile;
+
+            if (!string.IsNullOrWhiteSpace(profileUpdateDTO.password))
+            {
+                updateProfile.password = BCrypt.Net.BCrypt.HashPassword(profileUpdateDTO.password);
+            }
+
+            //Call repo method
+            await userRepo.updateUser(updateProfile);
+
+            resultResponse.data = "1";
+            resultResponse.message = "Profile Update Successfully";
+            resultResponse.status = true;
+
+            return resultResponse;
+        }
+
         public async Task<List<UserDTO>> viewUser()
         {
             var result = await userRepo.viewUser();
@@ -159,6 +203,24 @@ namespace eBazzar.Services
                 mobile = u.mobile,
                 password = u.password,
             }).ToList();
+        }
+
+        public async Task<ProfileUpdateDTO> getDataById(int id)
+        {
+            var existUser = await userRepo.getUserById(id);
+            if (existUser == null)
+            {
+                return null;
+            }
+
+            return new ProfileUpdateDTO
+            {
+                username = existUser.username,
+                email = existUser.email,
+                mobile = existUser.mobile,
+
+            };
+
         }
     }
 }

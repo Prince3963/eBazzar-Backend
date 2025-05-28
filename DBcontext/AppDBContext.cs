@@ -20,6 +20,7 @@ namespace eBazzar.DBcontext
         public DbSet<Order> orders { get; set; }
         public DbSet<Discount> discounts { get; set; }
         public DbSet<Category> categories { get; set; }
+        public DbSet<CartItem> cartItems { get; set; }
 
     }
 }

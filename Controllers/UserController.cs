@@ -2,6 +2,7 @@
 using eBazzar.HelperService;
 using eBazzar.Model;
 using eBazzar.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eBazzar.Controllers
@@ -25,17 +26,18 @@ namespace eBazzar.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("getUserData/{user_id}")]
-        public async Task<IActionResult> getProfileData(int user_id)
+        [Route("getUserData")]
+        public async Task<IActionResult> getProfileData()
         {
-            var result = await iuser.getDataById(user_id);
+            var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
+            var result = await iuser.getDataById(userId);
             if (result == null)
             {
                 return NotFound("User not found");      
             }
             return Ok(result);
-
         }
 
         [HttpPut]

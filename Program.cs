@@ -30,7 +30,11 @@ builder.Services.AddScoped<IProduct, ProductRepo>();
 builder.Services.AddScoped<IEmailService, EmailService>() ;
 builder.Services.AddScoped<ICategoryRepo, CategoryRepo>();
 builder.Services.AddScoped<ICategoryService, CategoryServices>();
-builder.Services.AddScoped <ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
+
+
 //builder.Services.AddScoped<ServiceResponse>();
 
 

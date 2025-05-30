@@ -1,13 +1,15 @@
-﻿using eBazzar.Model;
+﻿using eBazzar.DTO;
+using eBazzar.Model;
 
 namespace eBazzar.Repository
 {
-    public interface ICartRepository
+    // IRepository/ICartItemRepository.cs
+    public interface ICartItemRepository
     {
-        Task<CartItem> AddToCartAsync(int wishlistId, int productId, int quantity);
-        Task<Wishlist> GetOrCreateAnonymousWishlistAsync();
-        Task<Wishlist> GetWishlistByIdAsync(int wishlistId);
-        // Optional
-        Task<IEnumerable<CartItem>> GetCartItemsByWishlistIdAsync(int wishlistId);
+        Task<CartItem?> GetCartItemAsync(int? userId, int productId);
+        Task AddCartItemAsync(CartItem cartItem);
+        Task UpdateCartItemAsync(CartItem cartItem);
+        Task SaveChangesAsync();
     }
+
 }

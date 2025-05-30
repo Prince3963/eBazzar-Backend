@@ -1,9 +1,11 @@
-﻿namespace eBazzar.DTO
+﻿public class CartItemDTO
 {
-    public class CartItemDTO
+    // DTOs/AddToCartRequest.cs
+    public class AddToCartRequest
     {
-        public int? CartItemId { get; set; }
+        public int? UserId { get; set; }  // Nullable for guest
         public int ProductId { get; set; }
         public int Quantity { get; set; }
     }
+
 }

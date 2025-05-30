@@ -1,10 +1,14 @@
 ﻿using eBazzar.DTO;
+using eBazzar.Model;
 using eBazzar.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static CartItemDTO;
 
 namespace eBazzar.Controllers
 {
+    // Controllers/CartController.cs
     [ApiController]
     [Route("api/[controller]")]
     public class CartController : ControllerBase
@@ -17,25 +21,20 @@ namespace eBazzar.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddToCart([FromBody] CartItemDTO cartItemDto)
+        public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
         {
-            int? wishlistId = null;
-            if (Request.Headers.ContainsKey("Wishlist-Id"))
+            try
             {
-                int.TryParse(Request.Headers["Wishlist-Id"], out int parsedId);
-                wishlistId = parsedId;
+                await _cartService.AddToCartAsync(request);
+                return Ok(new { message = "Item added to cart successfully" });
             }
-
-            var addedItem = await _cartService.AddToCartAsync(wishlistId, cartItemDto.ProductId, cartItemDto.Quantity);
-
-            var response = new
+            catch (Exception ex)
             {
-                addedItem,
-                wishlistId = wishlistId ?? addedItem.CartItemId
-            };
-
-            return Ok(response);
+                return BadRequest(new { error = ex.Message });
+            }
         }
     }
+
+
 
 }

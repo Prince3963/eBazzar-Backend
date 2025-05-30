@@ -22,7 +22,8 @@ namespace eBazzar.Model
 
         //User Navigation
         [ForeignKey("user_id")]
-        public int? user_id { get; set; } = null;
+        public int? user_id { get; set; }
+        public User? User { get; set; }
 
 
         //Navigation

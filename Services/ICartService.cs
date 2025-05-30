@@ -1,10 +1,15 @@
 ﻿using eBazzar.DTO;
+using eBazzar.HelperService;
+using eBazzar.Model;
+using static CartItemDTO;
 
 namespace eBazzar.Services
 {
+    // IServices/ICartService.cs
     public interface ICartService
     {
-        Task<CartItemDTO> AddToCartAsync(int? wishlistId, int productId, int quantity);
-        Task<WishlistDTO> GetOrCreateAnonymousWishlistAsync();
+        Task AddToCartAsync(AddToCartRequest request);
     }
+
+
 }

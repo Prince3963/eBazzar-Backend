@@ -9,7 +9,6 @@ namespace eBazzar.Repository
         Task<Product> updateProduct(Product product, int product_id);
         Task<Product> deleteProduct(Product product);
         Task<List<Product>> viewProduct();
-
         Task<Product?> deleteProductById(int product_id);
         Task<Product> getProductById(int product_id);
         Task<Product> updateProductStatus(int product_id, ProductStatusDTO productStatusDTO);

@@ -1,44 +1,46 @@
 ﻿using eBazzar.DTO;
+using eBazzar.HelperService;
+using eBazzar.Model;
 using eBazzar.Repository;
 using eBazzar.Services;
+using static CartItemDTO;
 
+// Services/CartService.cs
+// Services/CartService.cs
 public class CartService : ICartService
 {
-    private readonly ICartRepository _cartRepository;
-
-    public CartService(ICartRepository cartRepository)
+    private readonly ICartItemRepository _cartRepo;
+    public CartService(ICartItemRepository cartRepo)
     {
-        _cartRepository = cartRepository;
+        _cartRepo = cartRepo;
     }
 
-    public async Task<WishlistDTO> GetOrCreateAnonymousWishlistAsync()
+    public async Task AddToCartAsync(AddToCartRequest request)
     {
-        var wishlist = await _cartRepository.GetOrCreateAnonymousWishlistAsync();
-        return new WishlistDTO
-        {
-            WishlistId = wishlist.wishlist_id,
-            CreatedAt = wishlist.createdAt,
-            ExpiresAt = wishlist.ExpiresAt,
-            UserId = wishlist.user_id
-        };
-    }
+        if (request.Quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.");
 
-    public async Task<CartItemDTO> AddToCartAsync(int? wishlistId, int productId, int quantity)
-    {
-        if (wishlistId == null)
+        var existingCartItem = await _cartRepo.GetCartItemAsync(request.UserId, request.ProductId);
+
+        if (existingCartItem != null)
         {
-            // Create or get anonymous wishlist
-            var wishlist = await _cartRepository.GetOrCreateAnonymousWishlistAsync();
-            wishlistId = wishlist.wishlist_id;
+            existingCartItem.quantity += request.Quantity;
+            existingCartItem.addedAt = DateTime.Now;
+            await _cartRepo.UpdateCartItemAsync(existingCartItem);
+        }
+        else
+        {
+            var newCartItem = new CartItem
+            {
+                user_id = request.UserId,
+                product_id = request.ProductId,
+                quantity = request.Quantity,
+                addedAt = DateTime.Now
+            };
+            await _cartRepo.AddCartItemAsync(newCartItem);
         }
 
-        var cartItem = await _cartRepository.AddToCartAsync(wishlistId.Value, productId, quantity);
-
-        return new CartItemDTO
-        {
-            CartItemId = cartItem.cartItmeId,
-            ProductId = cartItem.product_id.Value,
-            Quantity = cartItem.quantity
-        };
+        await _cartRepo.SaveChangesAsync();
     }
 }
+

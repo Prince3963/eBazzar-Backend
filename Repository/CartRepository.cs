@@ -3,67 +3,36 @@ using eBazzar.Model;
 using eBazzar.Repository;
 using Microsoft.EntityFrameworkCore;
 
-public class CartRepository : ICartRepository
+// Repository/CartItemRepository.cs
+public class CartItemRepository : ICartItemRepository
 {
     private readonly AppDBContext _context;
-
-    public CartRepository(AppDBContext context)
+    public CartItemRepository(AppDBContext context)
     {
-        _context = context;
+        this._context = context;
     }
 
-    public async Task<Wishlist> GetOrCreateAnonymousWishlistAsync()
+    public async Task<CartItem?> GetCartItemAsync(int? userId, int productId)
     {
-        // Check if there's already a valid wishlist for this anonymous user (maybe stored in cookie/session)
-        var wishlist = await _context.wishlists
-                            .Where(w => w.user_id  == null && w.ExpiresAt > DateTime.Now)
-                            .OrderByDescending(w => w.createdAt)
-                            .FirstOrDefaultAsync();
-
-        if (wishlist == null)
-        {
-            wishlist = new Wishlist();
-            _context.wishlists.Add(wishlist);
-            await _context.SaveChangesAsync();
-        }
-        return wishlist;
+        return await _context.cartItems
+            .FirstOrDefaultAsync(c => c.user_id == userId && c.product_id == productId);
     }
 
-    public async Task<CartItem> AddToCartAsync(int wishlistId, int productId, int quantity)
+    public async Task AddCartItemAsync(CartItem cartItem)
     {
-        // Check if product already exists in cart for this wishlist
-        var cartItem = await _context.cartItems
-                            .FirstOrDefaultAsync(c => c.wishlist_id == wishlistId && c.product_id == productId);
+        await _context.cartItems.AddAsync(cartItem);
+    }
 
-        if (cartItem != null)
-        {
-            cartItem.quantity += quantity;
-            cartItem.addedAt = DateTime.Now;
-            _context.cartItems.Update(cartItem);
-        }
-        else
-        {
-            cartItem = new CartItem
-            {
-                wishlist_id = wishlistId,
-                product_id = productId,
-                quantity = quantity,
-                addedAt = DateTime.Now
-            };
-            await _context.cartItems.AddAsync(cartItem);
-        }
+    public async Task UpdateCartItemAsync(CartItem cartItem)
+    {
+        _context.cartItems.Update(cartItem);
+    }
 
+    public async Task SaveChangesAsync()
+    {
         await _context.SaveChangesAsync();
-        return cartItem;
     }
 
-    public async Task<Wishlist> GetWishlistByIdAsync(int wishlistId)
-    {
-        return await _context.wishlists.FindAsync(wishlistId);
-    }
-
-    public async Task<IEnumerable<CartItem>> GetCartItemsByWishlistIdAsync(int wishlistId)
-    {
-        return await _context.cartItems.Where(c => c.wishlist_id == wishlistId).ToListAsync();
-    }
+    
 }
+

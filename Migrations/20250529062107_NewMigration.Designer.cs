@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eBazzar.DBcontext;
 
@@ -11,9 +12,11 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250529062107_NewMigration")]
+    partial class NewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,6 @@ namespace eBazzar.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("user_id")
                         .HasColumnType("int");
 
                     b.Property<int?>("wishlist_id")
@@ -492,11 +492,9 @@ namespace eBazzar.Migrations
 
             modelBuilder.Entity("eBazzar.Model.Wishlist", b =>
                 {
-                    b.HasOne("eBazzar.Model.User", "User")
+                    b.HasOne("eBazzar.Model.User", null)
                         .WithMany("wishlists")
                         .HasForeignKey("user_id1");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Category", b =>

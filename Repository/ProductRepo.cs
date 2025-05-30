@@ -66,7 +66,6 @@ namespace eBazzar.Repository
             return await dBContext.products.Include(p => p.Category).ToListAsync();
         }
 
-
         public async Task<Product> getProductById(int product_id)
         {
             var existProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);

@@ -27,7 +27,12 @@ namespace eBazzar.Model
         public DateTime? tokenExpirationTime { get; set; }
         public DateTime createdAt { get; set; } = DateTime.Now;
 
-        
+        //[Column("UserImage", TypeName = "varchar(255)")]
+        //public string? user_image { get; set; }
+        [Column("UserisActive", TypeName = "varchar(10)")]
+        public string? user_isActive { get; set; }
+
+
 
 
         ////Navigation Property

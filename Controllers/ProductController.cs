@@ -65,19 +65,30 @@ namespace eBazzar.Controllers
 
         [HttpPatch]
         [Route("updateProductStatus/{product_id}")]
-        public async Task<IActionResult> productStatus(int product_id, [FromForm] ProductStatusDTO productStatusDTO)
+        public async Task<IActionResult> productStatus(int product_id, [FromBody] ProductStatusDTO productStatusDTO)
         {
             try
             {
                 var result = await iserviceProduct.toggleStatus(productStatusDTO, product_id);
-                return Ok(result);
+
+                if (result.status == true)
+                {
+                    return Ok("Product status updated successfully!");
+                }
+                else
+                {
+                    return BadRequest(result.message ?? "Failed to update product status!");
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine("Please check your Controller "+e);
-                return NotFound();
+                Console.WriteLine("Error in updating product status: " + e.Message);
+                return StatusCode(500, new { message = "Internal Server Error" });
             }
         }
+
+
+
 
         [HttpDelete]
         [Route("deleteProduct/{product_id}")]

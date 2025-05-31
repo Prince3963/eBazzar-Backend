@@ -1,4 +1,5 @@
-﻿using eBazzar.Model;
+﻿using eBazzar.DTO;
+using eBazzar.Model;
 
 namespace eBazzar.Repository
 {
@@ -11,5 +12,6 @@ namespace eBazzar.Repository
         Task updatePassword(User user);
         Task updateUser(User user);
         Task<User> UserToken(string forgotPasswordToken);
+        Task<User> updateUserStatus(UserStatusDTO userStatusDTO, int user_id);
     }
 }

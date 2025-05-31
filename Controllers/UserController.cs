@@ -40,11 +40,35 @@ namespace eBazzar.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPatch]
         public async Task<IActionResult> updateProfile(int user_id,[FromQuery] ProfileUpdateDTO profileUpdateDTO)
         {
             var result = await iuser.updateUserProfile(user_id, profileUpdateDTO);
             return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("updateUserStatus/{user_id}")]
+        public async Task<IActionResult> updateUserStatus(int user_id, [FromBody]UserStatusDTO userStatusDTO)
+        {
+            try
+            {
+                var result = await iuser.toggleStatus(userStatusDTO, user_id);
+
+                if (result.status == true)
+                {
+                    return Ok("User status updated successfully!");
+                }
+                else
+                {
+                    return BadRequest(result.message ?? "Failed to update user status!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error in updating user status: " + e.Message);
+                return StatusCode(500, new { message = "Internal Server Error" });
+            }
         }
 
         [HttpPost]

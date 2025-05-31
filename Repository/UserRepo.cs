@@ -1,4 +1,5 @@
 ﻿using eBazzar.DBcontext;
+using eBazzar.DTO;
 using eBazzar.Model;
 using eBazzar.Services;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,20 @@ namespace eBazzar.Repository
         {
             dbContext.users.Update(user);
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<User> updateUserStatus(UserStatusDTO userStatusDTO, int user_id)
+        {
+            var updateUser = await dbContext.users.FirstOrDefaultAsync(u => u.user_id == user_id);
+            if (updateUser == null)
+            {
+                return null;    
+            }
+
+            updateUser.user_isActive = userStatusDTO.user_isActive;
+
+            await dbContext.SaveChangesAsync();
+            return updateUser;
         }
     }
 }

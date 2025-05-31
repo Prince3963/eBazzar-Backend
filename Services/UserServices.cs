@@ -13,20 +13,26 @@ namespace eBazzar.Services
     {
         private readonly IUserRepo userRepo;
         private readonly JwtTokenService jwtTokenService;
+        private readonly ICloudinaryService cloudinaryService;
         private readonly IEmailService emailService;
 
-        public UserServices(IUserRepo userRepo, JwtTokenService jwtTokenService, IEmailService emailService)
+        public UserServices(IUserRepo userRepo, ICloudinaryService cloudinaryService, JwtTokenService jwtTokenService, IEmailService emailService)
         {
             this.userRepo = userRepo;
             this.jwtTokenService = jwtTokenService;
+            this.cloudinaryService = cloudinaryService;
             this.emailService = emailService;
         }
-
 
 
         public async Task<ServiceResponse<string>> addUser(UserDTO userDTO)
         {
             var response = new ServiceResponse<string>();
+            //var imageURL = await cloudinaryService.uploadImages(userDTO.user_image);
+
+            //Console.WriteLine("img: " + imageURL);
+
+            //Console.WriteLine("Received file: " + userDTO.user_image?.FileName);
 
             var existUser = await userRepo.getUserByEmail(userDTO.email);
             if (existUser != null)
@@ -43,6 +49,9 @@ namespace eBazzar.Services
                 email = userDTO.email,
                 mobile = userDTO.mobile,
                 password = BCrypt.Net.BCrypt.HashPassword(userDTO.password),
+                createdAt = userDTO.createdAt,
+                user_isActive = userDTO.user_isActive,
+                //user_image = imageURL
             };
 
             await userRepo.addUser(user);
@@ -221,6 +230,34 @@ namespace eBazzar.Services
 
             };
 
+        }
+
+        public async Task<ServiceResponse<string>> toggleStatus(UserStatusDTO userStatusDTO, int user_id)
+        {
+            var resultResponse = new ServiceResponse<string>();
+            try
+            {
+                var updateUser = await userRepo.updateUserStatus(userStatusDTO, user_id);
+                resultResponse.data = "1";
+                resultResponse.message = $"Product status updated to {userStatusDTO.user_isActive}.";
+                resultResponse.status = true;
+
+                return resultResponse;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = ex.Message;
+                resultResponse.status = false;
+                return resultResponse;
+            }
+            catch (Exception)
+            {
+                resultResponse.data = "0";
+                resultResponse.message = "Product is not found";
+                resultResponse.status = false;
+                return resultResponse;
+            }
         }
     }
 }

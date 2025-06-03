@@ -80,5 +80,18 @@ namespace eBazzar.Repository
             await dbContext.SaveChangesAsync();
             return updateUser;
         }
+
+        public async Task<User> updateUserPassword(userPasswordDTO userPasswordDTO, int user_id)
+        {
+            var existUser = await dbContext.users.FirstOrDefaultAsync(u => u.user_id == user_id);
+            if (existUser == null)
+            {
+                return null;
+            }
+
+            existUser.password = userPasswordDTO.password;
+            await dbContext.SaveChangesAsync();
+            return existUser;
+        }
     }
 }

@@ -6,6 +6,7 @@ namespace eBazzar.Repository
     public interface IUserRepo
     {
         Task addUser(User user);
+        Task<User> updateUserPassword(userPasswordDTO userPasswordDTO, int user_id);
         Task<List<User>> viewUser();
         Task<User> getUserById(int id);
         Task<User?> getUserByEmail(string email);

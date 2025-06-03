@@ -25,6 +25,19 @@ namespace eBazzar.Controllers
         }
 
         [HttpGet]
+        [Route("getProductCategory/{category_id}")]
+        public async Task<IActionResult> getElectronicCategory(int category_id)
+        {
+            var result = await iserviceProduct.getElectronicProduct(category_id);
+            if (result == null)
+            {
+                return NotFound(new { message = "Product not found, please check your controller", status = false });   
+            }
+            return Ok(result);
+
+        }
+
+        [HttpGet]
         [Route("getProductById/{product_id}")]
         public async Task<IActionResult> getProductById(int product_id)
         {

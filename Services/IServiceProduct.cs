@@ -13,5 +13,6 @@ namespace eBazzar.Services
         Task<ServiceResponse<string>> deleteProduct(int product_id);
         Task<List<ProductDTO>> viewProduct();
         Task<ProductDTO?> getProductById(int product_id);
+        Task<List<ProductDTO?>> getElectronicProduct(int category_id);
     }
 }

@@ -227,9 +227,7 @@ namespace eBazzar.Services
                 username = existUser.username,
                 email = existUser.email,
                 mobile = existUser.mobile,
-
             };
-
         }
 
         public async Task<ServiceResponse<string>> toggleStatus(UserStatusDTO userStatusDTO, int user_id)
@@ -259,5 +257,36 @@ namespace eBazzar.Services
                 return resultResponse;
             }
         }
+
+        public async Task<ServiceResponse<string>> updatePassword(userPasswordDTO userPasswordDTO, int user_id)
+        {
+            var response = new ServiceResponse<string>();
+            try
+            {
+                userPasswordDTO.password = BCrypt.Net.BCrypt.HashPassword(userPasswordDTO.password);
+
+                var updatePassword = await userRepo.updateUserPassword(userPasswordDTO, user_id);
+                response.data = "1";
+                response.message = "Password Updated";
+                response.status = true;
+                return response;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                response.data = "0";
+                response.message = ex.Message;
+                response.status = false;
+                return response;
+            }
+            catch (Exception)
+            {
+                response.data = "0";
+                response.message = "User not found or error occurred";
+                response.status = false;
+                return response;
+            }
+        }
+
     }
 }
+

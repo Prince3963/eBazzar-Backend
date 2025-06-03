@@ -41,6 +41,22 @@ namespace eBazzar.Controllers
         }
 
         [HttpPatch]
+        [Route("userPassword/{user_id}")]
+        public async Task<IActionResult> updatePassword(int user_id, [FromBody] userPasswordDTO userPasswordDTO)
+        {
+            if (userPasswordDTO == null || string.IsNullOrEmpty(userPasswordDTO.password))
+            {
+                return BadRequest("Password cannot be empty");
+            }
+
+            var result = await iuser.updatePassword(userPasswordDTO, user_id);
+
+            return Ok(result);
+        }
+
+
+        [HttpPatch]
+        [Route("updateProfile/{user_id}")]
         public async Task<IActionResult> updateProfile(int user_id,[FromQuery] ProfileUpdateDTO profileUpdateDTO)
         {
             var result = await iuser.updateUserProfile(user_id, profileUpdateDTO);

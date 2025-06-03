@@ -154,6 +154,21 @@ namespace eBazzar.Services
             }
         }
 
+        public async Task<List<ProductDTO?>> getElectronicProduct(int category_id)
+        {
+            var electronicCategory = await iproduct.getElectronicProduct(category_id);
+            return electronicCategory.Select(c => new ProductDTO
+            {
+                product_id = c.product_id,
+                product_name = c.product_name,
+                product_description = c.product_description,
+                product_price = c.product_price,
+                product_imageURL = c.product_image,
+                product_isActive = c.product_isActive,
+                category_name = c.Category?.category_name
+            }).ToList();
+        }
+
         public async Task<ProductDTO?> getProductById(int product_id)
         {
             var product = await iproduct.getProductById(product_id);

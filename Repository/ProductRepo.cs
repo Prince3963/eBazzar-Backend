@@ -3,6 +3,7 @@ using eBazzar.DTO;
 using eBazzar.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Abstractions;
 using Microsoft.VisualBasic;
 
 namespace eBazzar.Repository
@@ -93,15 +94,23 @@ namespace eBazzar.Repository
         public async Task<Product> updateProductStatus(int product_id, ProductStatusDTO productStatusDTO)
         {
             var updateProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);
-            if (updateProduct == null)
-            {
-                return null;
-            }
+            //if (updateProduct == null)
+            //{
+            //    return null;
+            //}
 
             updateProduct.product_isActive = productStatusDTO.product_isActive;
 
             await dBContext.SaveChangesAsync();
             return updateProduct; 
+        }
+
+        public async Task<List<Product>> getElectronicProduct(int category_id)
+        {
+            var existElectronicProduct = await dBContext.products
+                .Include(c=>c.Category)
+                .Where(c => c.category_id == category_id).ToListAsync();
+            return existElectronicProduct;
         }
     }
 }

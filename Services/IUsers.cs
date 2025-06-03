@@ -9,6 +9,7 @@ namespace eBazzar.Services
         Task<ServiceResponse<string>> addUser(UserDTO userDTO);
         Task<List<UserDTO>> viewUser();
         Task<ServiceResponse<string>> toggleStatus(UserStatusDTO userStatusDTO, int user_id);
+        Task<ServiceResponse<string>> updatePassword(userPasswordDTO userPasswordDTO, int user_id);
         Task<ServiceResponse<string>> loginUser(LoginDTO loginDTO);
         Task<ServiceResponse<string>> userEmail(ForgotEmailDTO forgotEmail); 
         Task<ServiceResponse<string>> ForgotPasswrod(ForgotPasswordDTO forgotPassword);

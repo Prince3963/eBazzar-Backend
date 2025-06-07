@@ -9,7 +9,6 @@ namespace eBazzar.DBcontext
         {
             
         }
-
         public DbSet<User> users { get; set; }
         public DbSet<Role> roles { get; set; }
         public DbSet<Wishlist> wishlists { get; set; }
@@ -21,6 +20,6 @@ namespace eBazzar.DBcontext
         public DbSet<Discount> discounts { get; set; }
         public DbSet<Category> categories { get; set; }
         public DbSet<CartItem> cartItems { get; set; }
-
+        public DbSet<Address> addresse { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20250521081900_InitialDB")]
-    partial class InitialDB
+    [Migration("20250607134105_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,87 @@ namespace eBazzar.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("eBazzar.Model.Address", b =>
+                {
+                    b.Property<int>("address_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("address_id"));
+
+                    b.Property<string>("city")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("City");
+
+                    b.Property<string>("country")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Country");
+
+                    b.Property<string>("isDefault")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("isDefault");
+
+                    b.Property<string>("landmark")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Landmark");
+
+                    b.Property<string>("mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("number")
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Number");
+
+                    b.Property<string>("state")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("State");
+
+                    b.Property<string>("street")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Street");
+
+                    b.Property<int?>("user_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("zipCode")
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Zipcode");
+
+                    b.HasKey("address_id");
+
+                    b.ToTable("addresse");
+                });
+
+            modelBuilder.Entity("eBazzar.Model.CartItem", b =>
+                {
+                    b.Property<int>("cartItmeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("cartItmeId"));
+
+                    b.Property<DateTime>("addedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("product_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("user_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("cartItmeId");
+
+                    b.HasIndex("product_id");
+
+                    b.ToTable("cartItems");
+                });
 
             modelBuilder.Entity("eBazzar.Model.Category", b =>
                 {
@@ -353,6 +434,10 @@ namespace eBazzar.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("tokanExpirationTime");
 
+                    b.Property<string>("user_isActive")
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("UserisActive");
+
                     b.Property<string>("username")
                         .HasColumnType("varchar(50)")
                         .HasColumnName("UserName");
@@ -372,6 +457,9 @@ namespace eBazzar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("wishlist_id"));
 
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("createdAt")
                         .HasColumnType("datetime2");
 
@@ -386,6 +474,15 @@ namespace eBazzar.Migrations
                     b.HasIndex("user_id1");
 
                     b.ToTable("wishlists");
+                });
+
+            modelBuilder.Entity("eBazzar.Model.CartItem", b =>
+                {
+                    b.HasOne("eBazzar.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("product_id");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Discount", b =>
@@ -453,9 +550,11 @@ namespace eBazzar.Migrations
 
             modelBuilder.Entity("eBazzar.Model.Wishlist", b =>
                 {
-                    b.HasOne("eBazzar.Model.User", null)
+                    b.HasOne("eBazzar.Model.User", "User")
                         .WithMany("wishlists")
                         .HasForeignKey("user_id1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Category", b =>

@@ -14,7 +14,6 @@ namespace eBazzar.DTO
         //public IFormFile? user_image { get; set; }
         //public string? user_imageURL { get; set; }
         public string? user_isActive { get; set; }
-
         public DateTime createdAt { get; set; } = DateTime.Now;
     }
 }

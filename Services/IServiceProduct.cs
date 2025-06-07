@@ -14,5 +14,6 @@ namespace eBazzar.Services
         Task<List<ProductDTO>> viewProduct();
         Task<ProductDTO?> getProductById(int product_id);
         Task<List<ProductDTO?>> getElectronicProduct(int category_id);
+        Task<List<ProductDTO?>> getBookCategory(int category_id);
     }
 }

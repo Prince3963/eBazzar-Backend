@@ -25,19 +25,6 @@ namespace eBazzar.Controllers
         }
 
         [HttpGet]
-        [Route("getProductCategory/{category_id}")]
-        public async Task<IActionResult> getElectronicCategory(int category_id)
-        {
-            var result = await iserviceProduct.getElectronicProduct(category_id);
-            if (result == null)
-            {
-                return NotFound(new { message = "Product not found, please check your controller", status = false });   
-            }
-            return Ok(result);
-
-        }
-
-        [HttpGet]
         [Route("getProductById/{product_id}")]
         public async Task<IActionResult> getProductById(int product_id)
         {
@@ -50,6 +37,31 @@ namespace eBazzar.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("getProductCategory/{category_id}")]
+        public async Task<IActionResult> getElectronicCategory(int category_id)
+        {
+            var result = await iserviceProduct.getElectronicProduct(category_id);
+            if (result == null)
+            {
+                return NotFound(new { message = "Electronic category not found, please check your controller", status = false });   
+            }
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("getBookCategory/{category_id}")]
+        public async Task<IActionResult> getBookCategory(int category_id)
+        {
+            var result = await iserviceProduct.getBookCategory(category_id);
+            if (result == null)
+            {
+                return NotFound(new { message = "Book category not found, please check your controller", status = false });
+            }
+            return Ok(result);
+        }
+
 
         [HttpPost]
         [Route("addProduct")]
@@ -99,9 +111,6 @@ namespace eBazzar.Controllers
                 return StatusCode(500, new { message = "Internal Server Error" });
             }
         }
-
-
-
 
         [HttpDelete]
         [Route("deleteProduct/{product_id}")]

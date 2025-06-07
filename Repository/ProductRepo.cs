@@ -67,15 +67,6 @@ namespace eBazzar.Repository
             return await dBContext.products.Include(p => p.Category).ToListAsync();
         }
 
-        public async Task<Product> getProductById(int product_id)
-        {
-            var existProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);
-            if(existProduct == null)
-            {
-                return null;
-            }
-            return existProduct;
-        }
 
         public async Task<Product?> deleteProductById(int product_id)
         {
@@ -94,16 +85,19 @@ namespace eBazzar.Repository
         public async Task<Product> updateProductStatus(int product_id, ProductStatusDTO productStatusDTO)
         {
             var updateProduct = await dBContext.products.FirstOrDefaultAsync(p => p.product_id == product_id);
-            //if (updateProduct == null)
-            //{
-            //    return null;
-            //}
 
             updateProduct.product_isActive = productStatusDTO.product_isActive;
 
             await dBContext.SaveChangesAsync();
             return updateProduct; 
         }
+        public async Task<Product?> getProductById(int product_id)
+        {
+            return await dBContext.products
+                .Include(p => p.Category)
+                .FirstOrDefaultAsync(p => p.product_id == product_id);
+        }
+
 
         public async Task<List<Product>> getElectronicProduct(int category_id)
         {
@@ -111,6 +105,14 @@ namespace eBazzar.Repository
                 .Include(c=>c.Category)
                 .Where(c => c.category_id == category_id).ToListAsync();
             return existElectronicProduct;
+        }
+
+        public async Task<List<Product>> getBookProduct(int category_id)
+        {
+            var existBookCategory = await dBContext.products
+                .Include(c => c.Category)
+                .Where(c => c.category_id == category_id).ToListAsync();
+            return existBookCategory;
         }
     }
 }

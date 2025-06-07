@@ -33,6 +33,8 @@ builder.Services.AddScoped<ICategoryService, CategoryServices>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<eBazzar.Repository.IAddressRepo, AddrressRepo>();
+builder.Services.AddScoped<eBazzar.Services.IAddressService, AddressService>();
 
 
 //builder.Services.AddScoped<ServiceResponse>();

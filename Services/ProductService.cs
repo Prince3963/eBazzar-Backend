@@ -135,7 +135,6 @@ namespace eBazzar.Services
                         product_image = imageURL,
                         product_isActive = productDTO.product_isActive,
                         category_id = productDTO.category_id,
-
                     };
 
                     await iproduct.updateProduct(updatedProduct, product_id);
@@ -154,20 +153,6 @@ namespace eBazzar.Services
             }
         }
 
-        public async Task<List<ProductDTO?>> getElectronicProduct(int category_id)
-        {
-            var electronicCategory = await iproduct.getElectronicProduct(category_id);
-            return electronicCategory.Select(c => new ProductDTO
-            {
-                product_id = c.product_id,
-                product_name = c.product_name,
-                product_description = c.product_description,
-                product_price = c.product_price,
-                product_imageURL = c.product_image,
-                product_isActive = c.product_isActive,
-                category_name = c.Category?.category_name
-            }).ToList();
-        }
 
         public async Task<ProductDTO?> getProductById(int product_id)
         {
@@ -231,6 +216,35 @@ namespace eBazzar.Services
                 resultResponse.status = false;
                 return resultResponse;
             }
+        }
+        public async Task<List<ProductDTO?>> getElectronicProduct(int category_id)
+        {
+            var electronicCategory = await iproduct.getElectronicProduct(category_id);
+            return electronicCategory.Select(c => new ProductDTO
+            {
+                product_id = c.product_id,
+                product_name = c.product_name,
+                product_description = c.product_description,
+                product_price = c.product_price,
+                product_imageURL = c.product_image,
+                product_isActive = c.product_isActive,
+                category_name = c.Category?.category_name
+            }).ToList();
+        }
+
+        public async Task<List<ProductDTO?>> getBookCategory(int category_id)
+        {
+            var bookCategory = await iproduct.getBookProduct(category_id);
+            return bookCategory.Select(c => new ProductDTO
+            {
+                product_id = c.product_id,
+                product_name = c.product_name,
+                product_description = c.product_description,
+                product_price = c.product_price,
+                product_imageURL = c.product_image,
+                product_isActive = c.product_isActive,
+                category_name = c.Category?.category_name
+            }).ToList();
         }
     }
 }

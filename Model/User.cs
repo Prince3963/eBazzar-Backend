@@ -34,11 +34,11 @@ namespace eBazzar.Model
 
 
 
-
         ////Navigation Property
         public ICollection<Wishlist>? wishlists { get; set; }
         public ICollection<Review>? reviews { get; set; }
         public ICollection<Order>? orders { get; set; }
         public ICollection<Payment>? payments { get; set; }
+        //public ICollection<Address>? addresses { get; set; }
     }
 }

@@ -6,11 +6,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace eBazzar.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "addresse",
+                columns: table => new
+                {
+                    address_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Street = table.Column<string>(type: "varchar(255)", nullable: true),
+                    City = table.Column<string>(type: "varchar(255)", nullable: true),
+                    State = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Zipcode = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Landmark = table.Column<string>(type: "varchar(255)", nullable: true),
+                    Country = table.Column<string>(type: "varchar(255)", nullable: true),
+                    isDefault = table.Column<string>(type: "varchar(255)", nullable: true),
+                    username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    mobile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    user_id = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_addresse", x => x.address_id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "categories",
                 columns: table => new
@@ -66,6 +89,27 @@ namespace eBazzar.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "cartItems",
+                columns: table => new
+                {
+                    cartItmeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    quantity = table.Column<int>(type: "int", nullable: false),
+                    user_id = table.Column<int>(type: "int", nullable: true),
+                    product_id = table.Column<int>(type: "int", nullable: true),
+                    addedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_cartItems", x => x.cartItmeId);
+                    table.ForeignKey(
+                        name: "FK_cartItems_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "product_id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
@@ -78,6 +122,7 @@ namespace eBazzar.Migrations
                     forgotPasswordToken = table.Column<string>(type: "varchar(255)", nullable: true),
                     tokanExpirationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserisActive = table.Column<string>(type: "varchar(10)", nullable: true),
                     product_id = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -148,6 +193,7 @@ namespace eBazzar.Migrations
                     wishlist_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     createdAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     user_id = table.Column<int>(type: "int", nullable: true),
                     user_id1 = table.Column<int>(type: "int", nullable: true)
                 },
@@ -247,6 +293,11 @@ namespace eBazzar.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_cartItems_product_id",
+                table: "cartItems",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_discounts_wishlist_id1",
                 table: "discounts",
                 column: "wishlist_id1");
@@ -305,6 +356,12 @@ namespace eBazzar.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "addresse");
+
+            migrationBuilder.DropTable(
+                name: "cartItems");
+
             migrationBuilder.DropTable(
                 name: "orderDetails");
 

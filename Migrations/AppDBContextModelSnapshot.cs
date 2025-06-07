@@ -22,6 +22,60 @@ namespace eBazzar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("eBazzar.Model.Address", b =>
+                {
+                    b.Property<int>("address_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("address_id"));
+
+                    b.Property<string>("city")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("City");
+
+                    b.Property<string>("country")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Country");
+
+                    b.Property<string>("isDefault")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("isDefault");
+
+                    b.Property<string>("landmark")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Landmark");
+
+                    b.Property<string>("mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("number")
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Number");
+
+                    b.Property<string>("state")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("State");
+
+                    b.Property<string>("street")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("Street");
+
+                    b.Property<int?>("user_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("zipCode")
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("Zipcode");
+
+                    b.HasKey("address_id");
+
+                    b.ToTable("addresse");
+                });
+
             modelBuilder.Entity("eBazzar.Model.CartItem", b =>
                 {
                     b.Property<int>("cartItmeId")
@@ -376,10 +430,6 @@ namespace eBazzar.Migrations
                     b.Property<DateTime?>("tokenExpirationTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("tokanExpirationTime");
-
-                    b.Property<string>("user_image")
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("UserImage");
 
                     b.Property<string>("user_isActive")
                         .HasColumnType("varchar(10)")

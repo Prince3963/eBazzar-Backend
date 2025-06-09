@@ -18,20 +18,25 @@ namespace eBazzar.Controllers
             this.addressService = addressService;
         }
 
-        [HttpGet("user_id")]
-        public async Task<ActionResult<ServiceResponse<List<AddressDTO>>>> GetByUser(int user_id)
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<List<AddressDTO>>>> GetByUser()
         {
-            //var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
-            var response = await addressService.GetByUserIdAsync(user_id);
-            if (response == null)
+            var userId = int.Parse(User.FindFirst("user_id")?.Value ?? "0");
+            var response = await addressService.GetByUserIdAsync(userId);
+
+            if (response.data == null)
             {
-                return NotFound("User not found");
+                return NotFound("No addresses found for this user.");
             }
             return Ok(response);
         }
 
+
+
         [Authorize]
         [HttpPost]
+        [Route("user_id")]
         public async Task<ActionResult<ServiceResponse<AddressDTO>>> Post([FromBody] AddressDTO dto)
         {
             var user_id = int.Parse(User.FindFirst("user_id").Value ?? "0");

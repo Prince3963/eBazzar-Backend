@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using CloudinaryDotNet.Actions;
 using eBazzar.DTO;
 using eBazzar.HelperService;
 using eBazzar.Model;
@@ -31,8 +32,7 @@ namespace eBazzar.Services
                 response.status = false;
                 return response;
             }
-            //Console.WriteLine("user_id in controller:- " + existUser);
-
+            
             var address = new Address
             {
                 number = dto.number,
@@ -55,12 +55,12 @@ namespace eBazzar.Services
             return response;
         }
 
-
-
-
+        
         public async Task<ServiceResponse<List<AddressDTO>>> GetByUserIdAsync(int userId)
         {
-            var addresses = await addressRepo.GetByUserIdAsync(userId);
+            
+            var response = new ServiceResponse<List<AddressDTO>>();
+            var addresses = await addressRepo.GetAddressById(userId);
             var dtoList = addresses.Select(a => new AddressDTO
             {
                 address_id = a.address_id,
@@ -72,17 +72,18 @@ namespace eBazzar.Services
                 landmark = a.landmark,
                 country = a.country,
                 isDefault = a.isDefault,
-                //username = a.username,
-                //mobile = a.mobile,
+                username = a.username,
+                mobile = a.mobile,
                 user_id = a.user_id
             }).ToList();
 
-            return new ServiceResponse<List<AddressDTO>>
-            {
-                data = dtoList,
-                message = "Addresses retrieved successfully for user.",
-                status = true
-            };
+
+            response.data = dtoList;
+            response.message = "Address retrived successfully";
+            response.status = true;
+
+            return response;
+            
         }
     }
 }

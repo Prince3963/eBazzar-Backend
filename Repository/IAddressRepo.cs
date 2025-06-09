@@ -4,7 +4,7 @@ namespace eBazzar.Repository
 {
     public interface IAddressRepo
     {
-        Task<List<Address>> GetByUserIdAsync(int userId);
+        Task<List<Address>> GetAddressById(int userId);
         Task<Address> AddAsync(Address address);
     }
 }

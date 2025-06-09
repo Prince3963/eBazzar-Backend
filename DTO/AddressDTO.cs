@@ -11,8 +11,8 @@
         public string? landmark { get; set; }
         public string? country { get; set; }
         public string? isDefault { get; set; }
-        //public string? username { get; set; }
-        //public string? mobile { get; set; }
+        public string? username { get; set; }
+        public string? mobile { get; set; }
         public int? user_id { get; set; }
 
     }

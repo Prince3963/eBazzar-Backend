@@ -20,7 +20,7 @@ namespace eBazzar.Repository
             return address;
         }
 
-        public async Task<List<Address>> GetByUserIdAsync(int userId)
+        public async Task<List<Address>> GetAddressById(int userId)
         {
             return await dBContext.addresse
                 .Where(a => a.user_id == userId)

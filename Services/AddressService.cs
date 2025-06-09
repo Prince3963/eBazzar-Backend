@@ -1,4 +1,5 @@
-﻿using eBazzar.DTO;
+﻿using System.Security.Claims;
+using eBazzar.DTO;
 using eBazzar.HelperService;
 using eBazzar.Model;
 using eBazzar.Repository;
@@ -8,13 +9,30 @@ namespace eBazzar.Services
     public class AddressService : IAddressService
     {
         private readonly IAddressRepo addressRepo;
-        public AddressService(IAddressRepo addressRepo)
+        private readonly JwtTokenService jwtTokenService;
+        private readonly IUserRepo userRepo;
+        public AddressService(IAddressRepo addressRepo, JwtTokenService jwtTokenService, IUserRepo userRepo)
         {
             this.addressRepo = addressRepo;
+            this.jwtTokenService = jwtTokenService;
+            this.userRepo = userRepo;
         }
 
-        public async Task<ServiceResponse<AddressDTO>> AddAsync(AddressDTO dto)
+        public async Task<ServiceResponse<string>> AddAsync(AddressDTO dto, int user_id)
         {
+            var response = new ServiceResponse<string>();
+
+            var existUser = await userRepo.getUserById(user_id);
+
+            if (existUser == null)
+            {
+                response.data = "0";
+                response.message = "User not exist!";
+                response.status = false;
+                return response;
+            }
+            //Console.WriteLine("user_id in controller:- " + existUser);
+
             var address = new Address
             {
                 number = dto.number,
@@ -24,22 +42,21 @@ namespace eBazzar.Services
                 zipCode = dto.zipCode,
                 landmark = dto.landmark,
                 country = dto.country,
-                isDefault = dto.isDefault,
-                username = dto.username,
-                mobile = dto.mobile,
-                user_id = dto.user_id
+                user_id = existUser.user_id,
+                isDefault = dto.isDefault
             };
 
-            var saved = await addressRepo.AddAsync(address);
-            dto.address_id = saved.address_id;
+            await addressRepo.AddAsync(address);
 
-            return new ServiceResponse<AddressDTO>
-            {
-                data = dto,
-                message = "Address saved successfully.",
-                status = true
-            };
+            response.data = "1";
+            response.message = "Address added.";
+            response.status = true;
+
+            return response;
         }
+
+
+
 
         public async Task<ServiceResponse<List<AddressDTO>>> GetByUserIdAsync(int userId)
         {
@@ -55,8 +72,8 @@ namespace eBazzar.Services
                 landmark = a.landmark,
                 country = a.country,
                 isDefault = a.isDefault,
-                username = a.username,
-                mobile = a.mobile,
+                //username = a.username,
+                //mobile = a.mobile,
                 user_id = a.user_id
             }).ToList();
 

@@ -12,18 +12,19 @@ namespace eBazzar.Repository
             this.dBContext = dBContext;
         }
 
-        public async Task<List<Address>> GetByUserIdAsync(int userId)
-        {
-            return await dBContext.addresse
-                .Where(a => a.user_id == userId)
-                .ToListAsync();
-        }
 
         public async Task<Address> AddAsync(Address address)
         {
             dBContext.addresse.Add(address);
             await dBContext.SaveChangesAsync();
             return address;
+        }
+
+        public async Task<List<Address>> GetByUserIdAsync(int userId)
+        {
+            return await dBContext.addresse
+                .Where(a => a.user_id == userId)
+                .ToListAsync();
         }
     }
 }

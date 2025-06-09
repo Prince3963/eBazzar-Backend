@@ -62,10 +62,7 @@ namespace eBazzar.Services
             return response;
         }
 
-        //Get Company Profile
-
-
-
+        
         public async Task<ServiceResponse<string>> loginUser(LoginDTO loginDTO)
         {
             var response = new ServiceResponse<string>();

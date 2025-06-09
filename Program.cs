@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using eBazzar.DBcontext;
 using eBazzar.HelperService;
 using eBazzar.Repository;
@@ -61,7 +61,6 @@ builder.Services.AddCors(option =>
             .AllowAnyMethod();
         });
 });
-
 
 //JSON services
 builder.Services.AddAuthentication(option =>

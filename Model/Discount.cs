@@ -24,7 +24,7 @@ namespace eBazzar.Model
         public int? wishlist_id { get; set; }
 
         //Navigation Property
-        public ICollection<Payment>? payments { get; set; }
+        //public ICollection<Payments>? payments { get; set; }
 
     }
 }

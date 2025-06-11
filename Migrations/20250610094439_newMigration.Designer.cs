@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eBazzar.DBcontext;
 
@@ -11,9 +12,11 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250610094439_newMigration")]
+    partial class newMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,6 +170,39 @@ namespace eBazzar.Migrations
                     b.ToTable("discounts");
                 });
 
+            modelBuilder.Entity("eBazzar.Model.Order", b =>
+                {
+                    b.Property<int>("order_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_id"));
+
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("createdAt");
+
+                    b.Property<string>("status")
+                        .HasColumnType("varchar(15)")
+                        .HasColumnName("OrderStatus");
+
+                    b.Property<string>("total_price")
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("TotalPrice");
+
+                    b.Property<int?>("user_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("user_id1")
+                        .HasColumnType("int");
+
+                    b.HasKey("order_id");
+
+                    b.HasIndex("user_id1");
+
+                    b.ToTable("orders");
+                });
+
             modelBuilder.Entity("eBazzar.Model.OrderDetails", b =>
                 {
                     b.Property<int>("orderDetails_id")
@@ -207,43 +243,7 @@ namespace eBazzar.Migrations
                     b.ToTable("orderDetails");
                 });
 
-            modelBuilder.Entity("eBazzar.Model.Orders", b =>
-                {
-                    b.Property<int>("order_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_id"));
-
-                    b.Property<DateTime>("createdAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("createdAt");
-
-                    b.Property<string>("razorpayOrderId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("status")
-                        .HasColumnType("varchar(15)")
-                        .HasColumnName("OrderStatus");
-
-                    b.Property<string>("total_price")
-                        .HasColumnType("varchar(10)")
-                        .HasColumnName("TotalPrice");
-
-                    b.Property<int?>("user_id")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("user_id1")
-                        .HasColumnType("int");
-
-                    b.HasKey("order_id");
-
-                    b.HasIndex("user_id1");
-
-                    b.ToTable("orders");
-                });
-
-            modelBuilder.Entity("eBazzar.Model.Payments", b =>
+            modelBuilder.Entity("eBazzar.Model.Payment", b =>
                 {
                     b.Property<int>("payment_id")
                         .ValueGeneratedOnAdd()
@@ -251,27 +251,62 @@ namespace eBazzar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("payment_id"));
 
-                    b.Property<decimal>("amount")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("Amount");
+                    b.Property<DateTime>("createdAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("discount_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("discount_id1")
+                        .HasColumnType("int");
 
                     b.Property<int?>("order_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("order_id1")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("payment_date")
                         .HasColumnType("datetime2")
                         .HasColumnName("PaymentDate");
 
+                    b.Property<string>("payment_method")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("PaymentMethod");
+
+                    b.Property<string>("payment_status")
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("PaymentStatus");
+
+                    b.Property<string>("payment_transaction_id")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("PaymentTransactionId");
+
                     b.Property<string>("razorpay_order_id")
                         .HasColumnType("varchar(255)")
                         .HasColumnName("RazorpayOrderId");
 
+                    b.Property<string>("razorpay_payment_id")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("RazorpayPaymentId");
+
+                    b.Property<string>("razorpay_signature")
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("RazorpaySignature");
+
                     b.Property<int?>("user_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("user_id1")
                         .HasColumnType("int");
 
                     b.HasKey("payment_id");
 
-                    b.HasIndex("user_id");
+                    b.HasIndex("discount_id1");
+
+                    b.HasIndex("order_id1");
+
+                    b.HasIndex("user_id1");
 
                     b.ToTable("payments");
                 });
@@ -474,9 +509,16 @@ namespace eBazzar.Migrations
                         .HasForeignKey("wishlist_id1");
                 });
 
+            modelBuilder.Entity("eBazzar.Model.Order", b =>
+                {
+                    b.HasOne("eBazzar.Model.User", null)
+                        .WithMany("orders")
+                        .HasForeignKey("user_id1");
+                });
+
             modelBuilder.Entity("eBazzar.Model.OrderDetails", b =>
                 {
-                    b.HasOne("eBazzar.Model.Orders", "Order")
+                    b.HasOne("eBazzar.Model.Order", "Order")
                         .WithMany("orderDetails")
                         .HasForeignKey("order_id1");
 
@@ -487,20 +529,21 @@ namespace eBazzar.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("eBazzar.Model.Orders", b =>
+            modelBuilder.Entity("eBazzar.Model.Payment", b =>
                 {
-                    b.HasOne("eBazzar.Model.User", null)
-                        .WithMany("orders")
-                        .HasForeignKey("user_id1");
-                });
-
-            modelBuilder.Entity("eBazzar.Model.Payments", b =>
-                {
-                    b.HasOne("eBazzar.Model.User", "User")
+                    b.HasOne("eBazzar.Model.Discount", null)
                         .WithMany("payments")
-                        .HasForeignKey("user_id");
+                        .HasForeignKey("discount_id1");
 
-                    b.Navigation("User");
+                    b.HasOne("eBazzar.Model.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("order_id1");
+
+                    b.HasOne("eBazzar.Model.User", null)
+                        .WithMany("payments")
+                        .HasForeignKey("user_id1");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Product", b =>
@@ -544,7 +587,12 @@ namespace eBazzar.Migrations
                     b.Navigation("products");
                 });
 
-            modelBuilder.Entity("eBazzar.Model.Orders", b =>
+            modelBuilder.Entity("eBazzar.Model.Discount", b =>
+                {
+                    b.Navigation("payments");
+                });
+
+            modelBuilder.Entity("eBazzar.Model.Order", b =>
                 {
                     b.Navigation("orderDetails");
                 });

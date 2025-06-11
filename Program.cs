@@ -21,6 +21,9 @@ builder.Services.AddDbContext<AppDBContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("myConn"));
 });
 
+
+
+
 //Dependecies Injection
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IUsers, UserServices>();
@@ -35,12 +38,15 @@ builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<eBazzar.Repository.IAddressRepo, AddrressRepo>();
 builder.Services.AddScoped<eBazzar.Services.IAddressService, AddressService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IPaymentRepo, PayemntRepo>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 
 //builder.Services.AddScoped<ServiceResponse>();
 
 
-
+builder.Services.Configure<RazorpaySettings>(builder.Configuration.GetSection("RazorpaySettings"));
 
 // Add services to the container.
 builder.Services.AddControllers();

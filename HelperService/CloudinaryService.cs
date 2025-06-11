@@ -23,6 +23,9 @@ public class CloudinaryService : ICloudinaryService
             Console.WriteLine("ERROR: Cloudinary credentials are missing or invalid.");
         }
     }
+
+
+
     public async Task<string> uploadImages(IFormFile file)
     {
         Console.WriteLine("file received in CloudinaryService: " + file?.FileName);

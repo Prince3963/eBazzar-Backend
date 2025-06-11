@@ -32,8 +32,6 @@ namespace eBazzar.Controllers
             return Ok(response);
         }
 
-
-
         [Authorize]
         [HttpPost]
         [Route("user_id")]
@@ -48,8 +46,5 @@ namespace eBazzar.Controllers
             }
             return Ok(response);
         }
-
-
-
     }
 }

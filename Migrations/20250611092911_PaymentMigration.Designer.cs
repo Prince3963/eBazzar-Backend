@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eBazzar.DBcontext;
 
@@ -11,9 +12,11 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250611092911_PaymentMigration")]
+    partial class PaymentMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,7 +258,16 @@ namespace eBazzar.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("Amount");
 
+                    b.Property<int?>("discount_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("discount_id1")
+                        .HasColumnType("int");
+
                     b.Property<int?>("order_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("order_id1")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("payment_date")
@@ -270,6 +282,10 @@ namespace eBazzar.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("payment_id");
+
+                    b.HasIndex("discount_id1");
+
+                    b.HasIndex("order_id1");
 
                     b.HasIndex("user_id");
 
@@ -496,9 +512,19 @@ namespace eBazzar.Migrations
 
             modelBuilder.Entity("eBazzar.Model.Payments", b =>
                 {
+                    b.HasOne("eBazzar.Model.Discount", null)
+                        .WithMany("payments")
+                        .HasForeignKey("discount_id1");
+
+                    b.HasOne("eBazzar.Model.Orders", "Order")
+                        .WithMany()
+                        .HasForeignKey("order_id1");
+
                     b.HasOne("eBazzar.Model.User", "User")
                         .WithMany("payments")
                         .HasForeignKey("user_id");
+
+                    b.Navigation("Order");
 
                     b.Navigation("User");
                 });
@@ -542,6 +568,11 @@ namespace eBazzar.Migrations
             modelBuilder.Entity("eBazzar.Model.Category", b =>
                 {
                     b.Navigation("products");
+                });
+
+            modelBuilder.Entity("eBazzar.Model.Discount", b =>
+                {
+                    b.Navigation("payments");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Orders", b =>

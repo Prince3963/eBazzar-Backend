@@ -43,7 +43,9 @@ namespace eBazzar.Services
                 landmark = dto.landmark,
                 country = dto.country,
                 user_id = existUser.user_id,
-                isDefault = dto.isDefault
+                isDefault = dto.isDefault,
+                username = existUser.username,
+                mobile = existUser.mobile
             };
 
             await addressRepo.AddAsync(address);

@@ -60,7 +60,7 @@ namespace eBazzar.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR in company service in createCompanyProfile method: " + ex.Message);
+                Console.WriteLine("ERROR in company service in addProduct Service method: " + ex.Message);
                 throw;
             }
         }

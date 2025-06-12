@@ -1,170 +1,76 @@
-﻿using eBazzar.DBcontext;
-using eBazzar.DTO;
-using eBazzar.Model;
+﻿using eBazzar.DTO;
+using eBazzar.HelperService;
 using eBazzar.Repository;
-using eBazzar.Services;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
-public interface IOrderService
+namespace eBazzar.Services
 {
-    Task<Orders> CreateOrder(CreateOrderRequest request);
-    Task<Orders> GetOrderById(int orderId);
-    Task<Orders> GetOrderByRazorpayId(string razorpayOrderId);
-    //Task UpdateOrderStatus(int orderId, string status);
-    Task UpdateRazorpayOrderId(int orderId, string razorpayOrderId);
-    Task UpdatePaymentDetails(PaymentSuccessRequest request);
-}
-
-// Services/OrderService.cs
-public class OrderService : IOrderService
-{
-    private readonly AppDBContext _context;
-    private readonly IProduct _productService;
-    private readonly ILogger<OrderService> _logger;
-
-    public OrderService(AppDBContext context, IProduct productService, ILogger<OrderService> logger)
+    public class OrderService : IOrderService
     {
-        _context = context;
-        _productService = productService;
-        _logger = logger;
-    }
+        private readonly IOrderRepo orderRepo;
+        private readonly IUserRepo userRepo;
 
-    // Naya order create karne ka method
-    public async Task<Orders> CreateOrder(CreateOrderRequest request)
-    {
-        using var transaction = await _context.Database.BeginTransactionAsync();
-
-        try
+        public OrderService(IOrderRepo orderRepo, IUserRepo userRepo)
         {
-            // 1. Pehle order create karo
-            var order = new Orders
+            this.orderRepo = orderRepo;
+            this.userRepo = userRepo;
+        }
+
+        public async Task<ServiceResponse<string>> addOrder(OrdersDTO OrdersDTO, int userId)
+        {
+            try
             {
-                user_id = request.UserId,
-                total_price = request.TotalAmount,
-                status = "Pending",
-                createdAt = DateTime.Now,
-                //currency = request.Currency ?? "INR"
-            };
 
-            _context.orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // 2. Order items add karo
-            foreach (var item in request.Items)
-            {
-                var product = await _productService.getProductById((int) item.product_id);
-
-                if (product == null)
+                var response = new ServiceResponse<string>();
+                var existUser = await userRepo.getUserById(userId);
+                if (existUser == null)
                 {
-                    throw new Exception($"Product {(int)item.product_id} not available");
+                    response.data = "0";
+                    response.message = "User is not exist";
+                    response.status = false;
+
+                    return response;
                 }
 
-                var orderDetail = new OrderDetails
+                var existOrder = new Orders
                 {
-                    order_id = order.order_id,
-                    product_id = (int)item.product_id,
-                    quantity = item.quantity,
-                    final_price = item.final_price,
-                    createdAt = DateTime.Now
+                    address_id = OrdersDTO.address_id,
+                    razorpay_order_id = OrdersDTO.razorpay_order_id,
+                    user_id = userId,
+                    total_price = OrdersDTO.total_price,
+                    createdAt = OrdersDTO.createdAt,
+                    status = OrdersDTO.status,
                 };
 
-                _context.orderDetails.Add(orderDetail);
-
-                // Product stock update karo
-            }
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            return order;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            _logger.LogError(ex, "Order creation failed");
-            throw;
-        }
-    }
-
-    // Razorpay order ID update karne ka method
-    public async Task UpdateRazorpayOrderId(int orderId, string razorpayOrderId)
-    {
-        var order = await _context.orders.FindAsync(orderId);
-        if (order == null)
-        {
-            throw new Exception("Order not found");
-        }
-
-        order.razorpayOrderId = razorpayOrderId;
-        order.status = "PaymentPending";
-
-        await _context.SaveChangesAsync();
-    }
-
-    // Payment successful hone par update karne ka method
-    public async Task UpdatePaymentDetails(PaymentSuccessRequest request)
-    {
-        using var transaction = await _context.Database.BeginTransactionAsync();
-
-        try
-        {
-            // 1. Order fetch karo
-            var order = await _context.orders
-                .FirstOrDefaultAsync(o => o.razorpayOrderId == request.RazorpayOrderId);
-
-            if (order == null)
-            {
-                throw new Exception("Order not found");
-            }
-
-            // 2. Payment record create/update karo
-            var payment = await _context.payments
-                .FirstOrDefaultAsync(p => p.order_id == order.order_id);
-
-            if (payment == null)
-            {
-                payment = new Payments
+                var newOrder = await orderRepo.addOrder(existOrder);
+                if (newOrder != null)
                 {
-                    order_id = order.order_id,
-                    user_id = order.user_id,
-                    payment_date = DateTime.Now,
-                    //createdAt = DateTime.Now
-                };
-                _context.payments.Add(payment);
+                    response.data = "1";
+                    response.message = "Order is Successfull";
+                    response.status = true;
+
+                }
+                    return response;
             }
-
-            payment.razorpay_order_id = request.RazorpayOrderId;
-            //payment.razorpay_payment_id = request.RazorpayPaymentId;
-            //payment.razorpay_signature = request.RazorpaySignature;
-            //payment.payment_status = "captured";
-            payment.amount = order.total_price ?? 0;
-
-           
-            order.status = "Paid";
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            catch(Exception ex)
+            {
+                Console.WriteLine("ERROR in company service in getAllOrderAdmin Service method: " + ex.Message);
+                throw;
+            }
         }
-        catch (Exception ex)
+
+        public async Task<List<OrdersDTO>> getAllOrders()
         {
-            await transaction.RollbackAsync();
-            _logger.LogError(ex, "Payment update failed");
-            throw;
+            var result = await orderRepo.getAllOrders();
+            return result.Select(o => new OrdersDTO
+            {
+                address_id = o.address_id,
+                username = o.User?.username,
+                razorpay_order_id = o.razorpay_order_id,
+                createdAt = o.createdAt,
+                status = o.status,
+                total_price = o.total_price,
+            }).ToList();
         }
-    }
-
-    // Order by ID get karne ka method
-    public async Task<Orders> GetOrderById(int orderId)
-    {
-        return await _context.orders
-            .Include(o => o.orderDetails)
-            .FirstOrDefaultAsync(o => o.order_id == orderId);
-    }
-
-    // Razorpay order ID se order get karne ka method
-    public async Task<Orders> GetOrderByRazorpayId(string razorpayOrderId)
-    {
-        return await _context.orders
-            .FirstOrDefaultAsync(o => o.razorpayOrderId == razorpayOrderId);
     }
 }

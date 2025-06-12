@@ -67,7 +67,6 @@ namespace eBazzar.Controllers
         [Route("addProduct")]
         public async Task<IActionResult> addProduct([FromForm] ProductDTO productDTO)
         {
-            Console.WriteLine("img: " + productDTO.product_imageURL);
             var result = await iserviceProduct.addProduct(productDTO);
             return Ok(result);
         }

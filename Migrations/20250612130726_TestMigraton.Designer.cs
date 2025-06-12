@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eBazzar.DBcontext;
 
@@ -11,9 +12,11 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250612130726_TestMigraton")]
+    partial class TestMigraton
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +67,6 @@ namespace eBazzar.Migrations
                     b.Property<int?>("user_id")
                         .HasColumnType("int");
 
-                    b.Property<int?>("user_id1")
-                        .HasColumnType("int");
-
                     b.HasKey("order_id");
 
                     b.HasIndex("Paymentspayment_id");
@@ -75,9 +75,22 @@ namespace eBazzar.Migrations
 
                     b.HasIndex("product_id");
 
-                    b.HasIndex("user_id1");
-
                     b.ToTable("orders");
+                });
+
+            modelBuilder.Entity("OrdersUser", b =>
+                {
+                    b.Property<int>("Usersuser_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ordersorder_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Usersuser_id", "ordersorder_id");
+
+                    b.HasIndex("ordersorder_id");
+
+                    b.ToTable("OrdersUser");
                 });
 
             modelBuilder.Entity("eBazzar.Model.Address", b =>
@@ -491,13 +504,22 @@ namespace eBazzar.Migrations
                         .WithMany()
                         .HasForeignKey("product_id");
 
-                    b.HasOne("eBazzar.Model.User", "User")
-                        .WithMany("orders")
-                        .HasForeignKey("user_id1");
-
                     b.Navigation("Product");
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("OrdersUser", b =>
+                {
+                    b.HasOne("eBazzar.Model.User", null)
+                        .WithMany()
+                        .HasForeignKey("Usersuser_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Orders", null)
+                        .WithMany()
+                        .HasForeignKey("ordersorder_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("eBazzar.Model.CartItem", b =>
@@ -605,8 +627,6 @@ namespace eBazzar.Migrations
 
             modelBuilder.Entity("eBazzar.Model.User", b =>
                 {
-                    b.Navigation("orders");
-
                     b.Navigation("payments");
 
                     b.Navigation("reviews");

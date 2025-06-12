@@ -52,7 +52,6 @@ public class PaymentService : IPaymentService
                 amount = request.amount,
                 payment_date = DateTime.Now,
                 user_id = existUser.user_id,
-                order_id = request.order_id
             };
 
             await paymentRepo.addPayment(payment);

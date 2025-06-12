@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eBazzar.DBcontext;
 
@@ -11,9 +12,11 @@ using eBazzar.DBcontext;
 namespace eBazzar.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250612061838_OrderMigration")]
+    partial class OrderMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,11 +47,9 @@ namespace eBazzar.Migrations
                         .HasColumnName("createdAt");
 
                     b.Property<string>("extra")
+                        .IsRequired()
                         .HasColumnType("varchar(255)")
                         .HasColumnName("Extra");
-
-                    b.Property<int?>("product_id")
-                        .HasColumnType("int");
 
                     b.Property<string>("razorpay_order_id")
                         .HasColumnType("nvarchar(max)");
@@ -72,8 +73,6 @@ namespace eBazzar.Migrations
                     b.HasIndex("Paymentspayment_id");
 
                     b.HasIndex("address_id1");
-
-                    b.HasIndex("product_id");
 
                     b.HasIndex("user_id1");
 
@@ -487,17 +486,9 @@ namespace eBazzar.Migrations
                         .WithMany("orders")
                         .HasForeignKey("address_id1");
 
-                    b.HasOne("eBazzar.Model.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("product_id");
-
-                    b.HasOne("eBazzar.Model.User", "User")
+                    b.HasOne("eBazzar.Model.User", null)
                         .WithMany("orders")
                         .HasForeignKey("user_id1");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("eBazzar.Model.CartItem", b =>

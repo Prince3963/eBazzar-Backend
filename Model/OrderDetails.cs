@@ -17,13 +17,15 @@ namespace eBazzar.Model
 
         public DateTime createdAt { get; set; } = DateTime.Now;
 
-        [ForeignKey("product_id")]
-        public int? product_id { get; set; }
 
-        [ForeignKey("order_id")]
+        public int? product_id { get; set; }
+        [ForeignKey("product_id")]
+        public Product? Product { get; set; }
+
         public int? order_id { get; set; }
+        [ForeignKey("order_id")]
+        public Orders? Order { get; set; }
 
         // Optional navigation
-        public virtual Orders? Order { get; set; }
     }
 }

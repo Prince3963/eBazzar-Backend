@@ -38,6 +38,7 @@ builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<eBazzar.Repository.IAddressRepo, AddrressRepo>();
 builder.Services.AddScoped<eBazzar.Services.IAddressService, AddressService>();
+builder.Services.AddScoped<IOrderRepo, OrderRepo>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentRepo, PayemntRepo>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();

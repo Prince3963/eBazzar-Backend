@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 
@@ -37,7 +37,10 @@ namespace eBazzar.Model
         public string? username { get; set; }
         public string? mobile { get; set; }
 
-        [ForeignKey(nameof(User))]
+        [ForeignKey("user_id")]
         public int? user_id { get; set; }
+
+
+        public ICollection <Orders>? orders { get; set; }
     }
 }

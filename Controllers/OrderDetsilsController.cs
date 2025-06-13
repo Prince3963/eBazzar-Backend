@@ -23,5 +23,20 @@ namespace eBazzar.Controllers
             var result = await orderDetails.addOrderDetails(orderDetailsDTO);
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> getOrdersById()
+        {
+            var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
+            if (userId == null)
+            {
+                return null;
+            }
+
+            var result = await orderDetails.getOrderDetailsById(userId);
+            return Ok(result);
+        }
+
     }
 }

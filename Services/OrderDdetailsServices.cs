@@ -56,5 +56,45 @@ namespace eBazzar.Services
             }
             return response;
         }
+
+        public async Task<ServiceResponse<List<OrderDetailsDTO>>> getOrderDetailsById(int user_id)
+        {
+            var response = new ServiceResponse<List<OrderDetailsDTO>>();
+            try
+            {
+                var orderDetails = await orderDetailsRepo.getOrderById(user_id);
+                if (orderDetails == null)
+                {
+                    response.data = null;
+                    response.message = "orderDetails is null";
+                    response.status = false;
+
+                    return response;
+                }
+
+                var orderDetailsList = orderDetails.Select(o => new OrderDetailsDTO
+                {
+                    
+                    final_price = o.productPrice,
+                    product_image = o.productImage,
+                    product_name = o.productName,
+                    quantity = o.quantity,
+                    
+                }).ToList();
+
+                response.data = orderDetailsList;
+                response.message = "OrderDetails fetched";
+                response.status = true;
+            }
+            catch(Exception e)
+            {
+                response.status = false;
+                response.message = $"An error occurred: {e.Message}";
+                response.data = null;
+                return response;
+            }
+
+            return response;
+        }
     }
 }

@@ -9,8 +9,9 @@ namespace eBazzar.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int orderDetailsId { get; set; }
 
-        [ForeignKey("order_id")]
         public int? order_id { get; set; }
+        [ForeignKey("order_id")]
+        public Orders Orders { get; set; }
 
         [Column("productId", TypeName = "int")]
 
@@ -23,5 +24,7 @@ namespace eBazzar.Model
         public int quantity { get; set; }
         [Column("productImage", TypeName = "varchar(1000)")]
         public string? productImage { get; set; }
+
+        public string razorpay_order_id { get; set; }
     }
 }

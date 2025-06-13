@@ -19,5 +19,17 @@ namespace eBazzar.Repository
             await dBContext.SaveChangesAsync();
             return orderDetails;
         }
+
+        public async Task<List<OrderDetails>> getOrderById(int userId)
+        {
+            var orderDetailsList = await dBContext.orderDetails
+                .Include(od => od.Orders)
+                .ThenInclude(o => o.User)
+                .Where(od => od.Orders.User.user_id == userId)
+                .ToListAsync();
+
+            return orderDetailsList;
+        }
+
     }
 }

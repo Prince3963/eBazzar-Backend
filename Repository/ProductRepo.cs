@@ -98,21 +98,12 @@ namespace eBazzar.Repository
                 .FirstOrDefaultAsync(p => p.product_id == product_id);
         }
 
-
         public async Task<List<Product>> getElectronicProduct(int category_id)
         {
             var existElectronicProduct = await dBContext.products
                 .Include(c=>c.Category)
                 .Where(c => c.category_id == category_id).ToListAsync();
             return existElectronicProduct;
-        }
-
-        public async Task<List<Product>> getBookProduct(int category_id)
-        {
-            var existBookCategory = await dBContext.products
-                .Include(c => c.Category)
-                .Where(c => c.category_id == category_id).ToListAsync();
-            return existBookCategory;
         }
     }
 }

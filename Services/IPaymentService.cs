@@ -7,6 +7,6 @@ namespace eBazzar.Services
     public interface IPaymentService
     {
         Task<ServiceResponse<string>> CreateOrderAsync(PaymentRequest request, int userId);
-        bool VerifyPayment(PaymentVerificationRequest request);
+        Task<bool> VerifyPayment(PaymentVerificationRequest request, int userId);
     }
 }

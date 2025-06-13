@@ -232,19 +232,6 @@ namespace eBazzar.Services
             }).ToList();
         }
 
-        public async Task<List<ProductDTO?>> getBookCategory(int category_id)
-        {
-            var bookCategory = await iproduct.getBookProduct(category_id);
-            return bookCategory.Select(c => new ProductDTO
-            {
-                product_id = c.product_id,
-                product_name = c.product_name,
-                product_description = c.product_description,
-                product_price = c.product_price,
-                product_imageURL = c.product_image,
-                product_isActive = c.product_isActive,
-                category_name = c.Category?.category_name
-            }).ToList();
-        }
+        
     }
 }

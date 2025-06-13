@@ -7,25 +7,21 @@ namespace eBazzar.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int orderDetails_id { get; set; }
+        public int orderDetailsId { get; set; }
 
-        [Column("OrderQuantity", TypeName = "int")]
-        public int? quantity { get; set; }
-
-        [Column("OrderFinalPrice", TypeName = "int")]
-        public int? final_price { get; set; }
-
-        public DateTime createdAt { get; set; } = DateTime.Now;
-
-
-        public int? product_id { get; set; }
-        [ForeignKey("product_id")]
-        public Product? Product { get; set; }
-
-        public int? order_id { get; set; }
         [ForeignKey("order_id")]
-        public Orders? Order { get; set; }
+        public int? order_id { get; set; }
 
-        // Optional navigation
+        [Column("productId", TypeName = "int")]
+
+        public int productId { get; set; }
+        [Column("productName", TypeName = "varchar(500)")]
+        public string productName { get; set; }
+        [Column("productPrice", TypeName = "decimal(18,2)")]
+        public decimal productPrice { get; set; }
+        [Column("quantity", TypeName = "int")]
+        public int quantity { get; set; }
+        [Column("productImage", TypeName = "varchar(1000)")]
+        public string? productImage { get; set; }
     }
 }

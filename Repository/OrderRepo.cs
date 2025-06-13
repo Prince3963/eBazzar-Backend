@@ -21,10 +21,16 @@ namespace eBazzar.Repository
 
         public async Task<List<Orders>> getAllOrders()
         {
-            return await dBContext.orders
-                .Include(o => o.Product)
-                .Include(o => o.User)     
-                .ToListAsync();
+            try
+            {
+                var res = await dBContext.orders.Include(o => o.User).ToListAsync();
+                return res;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }

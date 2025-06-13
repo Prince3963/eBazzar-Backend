@@ -26,13 +26,6 @@ namespace eBazzar.Controllers
                 var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
 
                 var order = await paymentService.CreateOrderAsync(request, userId);
-                //return Ok(new
-                //{
-                //    id = order.razorpay_order_id,
-                //    amount = order.amount * 100,
-                //    currency = "INR"
-                //});
-
                 return Ok(order);
             }
             catch (Exception ex)
@@ -43,11 +36,14 @@ namespace eBazzar.Controllers
 
         [Authorize]
         [HttpPost("verify-payment")]
-        public IActionResult VerifyPayment([FromBody] PaymentVerificationRequest request)
+        public async Task<IActionResult> VerifyPayment([FromBody] PaymentVerificationRequest request)
         {
             try
             {
-                var isValid = paymentService.VerifyPayment(request);
+                var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
+
+                var isValid = await paymentService.VerifyPayment(request, userId);
+
                 return Ok(new { success = isValid });
             }
             catch (Exception ex)

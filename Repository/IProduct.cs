@@ -12,7 +12,6 @@ namespace eBazzar.Repository
         Task<Product?> deleteProductById(int product_id);
         Task<Product> getProductById(int product_id);
         Task<List<Product>> getElectronicProduct(int category_id);
-        Task<List<Product>> getBookProduct(int category_id);
         Task<Product> updateProductStatus(int product_id, ProductStatusDTO productStatusDTO);
     }
 }

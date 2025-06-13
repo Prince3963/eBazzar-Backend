@@ -18,59 +18,87 @@ namespace eBazzar.Services
 
         public async Task<ServiceResponse<string>> addOrder(OrdersDTO OrdersDTO, int userId)
         {
+            var response = new ServiceResponse<string>();
+
             try
             {
-
-                var response = new ServiceResponse<string>();
                 var existUser = await userRepo.getUserById(userId);
                 if (existUser == null)
                 {
-                    response.data = "0";
-                    response.message = "User is not exist";
+                    response.message = "User not found";
                     response.status = false;
-
                     return response;
                 }
 
-                var existOrder = new Orders
+                //// Optional: check if order already exists
+                //var alreadyExist = await orderRepo.getOrderByRazorpayOrderId(OrdersDTO.razorpay_order_id);
+                //if (alreadyExist != null)
+                //{
+                //    response.message = "Order already exists";
+                //    response.status = false;
+                //    return response;
+                //}
+
+                var newOrder = new Orders
                 {
                     address_id = OrdersDTO.address_id,
                     razorpay_order_id = OrdersDTO.razorpay_order_id,
                     user_id = userId,
                     total_price = OrdersDTO.total_price,
-                    createdAt = OrdersDTO.createdAt,
-                    status = OrdersDTO.status,
+                    createdAt = DateTime.Now,
+                    status = OrdersDTO.status ?? "Pending"
                 };
 
-                var newOrder = await orderRepo.addOrder(existOrder);
-                if (newOrder != null)
-                {
-                    response.data = "1";
-                    response.message = "Order is Successfull";
-                    response.status = true;
+                var insertedOrder = await orderRepo.addOrder(newOrder);
 
-                }
-                    return response;
+                response.data = insertedOrder.order_id.ToString();
+                response.message = "Order successfully created";
+                response.status = true;
+                return response;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("ERROR in company service in getAllOrderAdmin Service method: " + ex.Message);
+                Console.WriteLine("AddOrder error: " + ex.Message);
                 throw;
             }
         }
 
-        public async Task<List<OrdersDTO>> getAllOrders()
+        public async Task<ServiceResponse<List<OrdersDTO>>> getAllOrders()
         {
-            var result = await orderRepo.getAllOrders();
-            return result.Select(o => new OrdersDTO
+            try
             {
-                address_id = o.address_id,
-                username = o.User?.username,
-                razorpay_order_id = o.razorpay_order_id,
-                createdAt = o.createdAt,
-                status = o.status,
-                total_price = o.total_price,
-            }).ToList();
+                var response = new ServiceResponse<List<OrdersDTO>>();
+
+                var data = await orderRepo.getAllOrders();
+
+                if (data == null)
+                {
+                    response.data = null;
+                    response.message = "null";
+                    response.status = false;
+                    return response;
+                }
+
+                var result = data.Select(o => new OrdersDTO
+                {
+                    address_id = o.address_id,
+                    username = o.User?.username,
+                    razorpay_order_id = o.razorpay_order_id,
+                    createdAt = o.createdAt,
+                    status = o.status,
+                    total_price = o.total_price,
+                }).ToList();
+
+                response.data = result;
+                response.message = "Data fecthed.";
+                response.status = true;
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }

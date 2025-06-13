@@ -1,8 +1,10 @@
-﻿using eBazzar.DTO;
+﻿using eBazzar.DBcontext;
+using eBazzar.DTO;
 using eBazzar.HelperService;
 using eBazzar.Model;
 using eBazzar.Repository;
 using eBazzar.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Razorpay.Api;
 using System.Collections.Generic;
@@ -13,12 +15,14 @@ public class PaymentService : IPaymentService
     private readonly RazorpayClient _razorpayClient;
     private readonly IPaymentRepo paymentRepo;
     private readonly IUserRepo userRepo;
+    private readonly AppDBContext dbContext;
 
-    public PaymentService(IOptions<RazorpaySettings> razorpaySettings, IPaymentRepo paymentRepo, IUserRepo userRepo)
+    public PaymentService(IOptions<RazorpaySettings> razorpaySettings, IPaymentRepo paymentRepo, IUserRepo userRepo, AppDBContext dbContext)
     {
         this._razorpayClient = new RazorpayClient(razorpaySettings.Value.Key, razorpaySettings.Value.Secret);
         this.paymentRepo = paymentRepo;
         this.userRepo = userRepo;
+        this.dbContext = dbContext;
     }
 
     public async Task<ServiceResponse<string>> CreateOrderAsync(PaymentRequest request, int userId)
@@ -72,7 +76,7 @@ public class PaymentService : IPaymentService
         }
     }
 
-    public bool VerifyPayment(PaymentVerificationRequest request)
+    public async Task<bool> VerifyPayment(PaymentVerificationRequest request, int userId)
     {
         var attributes = new Dictionary<string, string>
     {
@@ -84,11 +88,58 @@ public class PaymentService : IPaymentService
         try
         {
             Utils.verifyPaymentSignature(attributes);
+
+            // Step 1: Update Payments Table
+            var payment = await dbContext.payments
+                .FirstOrDefaultAsync(p => p.razorpay_order_id == request.RazorpayOrderId);
+
+            if (payment == null) return false;
+
+            payment.razorpay_payment_id = request.RazorpayPaymentId;
+            payment.razorpay_signature = request.RazorpaySignature;
+
+            dbContext.payments.Update(payment);
+            await dbContext.SaveChangesAsync();
+
+            // Step 2: Create Order
+            var order = new Orders
+            {
+                user_id = userId,
+                address_id = request.AddressId,
+                payment_id = payment.payment_id,
+                status = "Placed",
+                total_price = request.CartItems.Sum(i => i.ProductPrice * i.Quantity),
+                razorpay_order_id = request.RazorpayOrderId
+            };
+
+            await dbContext.orders.AddAsync(order);
+            await dbContext.SaveChangesAsync(); // to get order_id
+
+            // Step 3: Add OrderDetails
+            foreach (var item in request.CartItems)
+            {
+                var orderDetail = new OrderDetails
+                {
+                    order_id = order.order_id,
+                    productId = item.ProductId,
+                    productName = item.ProductName,
+                    productPrice = item.ProductPrice,
+                    quantity = item.Quantity,
+                    productImage = item.ProductImage
+                };
+
+                await dbContext.orderDetails.AddAsync(orderDetail);
+            }
+
+            await dbContext.SaveChangesAsync();
+
             return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine("Verification failed: " + ex.Message);
             return false;
         }
     }
+
 }

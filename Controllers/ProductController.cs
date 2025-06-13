@@ -50,17 +50,7 @@ namespace eBazzar.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("getBookCategory/{category_id}")]
-        public async Task<IActionResult> getBookCategory(int category_id)
-        {
-            var result = await iserviceProduct.getBookCategory(category_id);
-            if (result == null)
-            {
-                return NotFound(new { message = "Book category not found, please check your controller", status = false });
-            }
-            return Ok(result);
-        }
+        
 
 
         [HttpPost]

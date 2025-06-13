@@ -1,4 +1,4 @@
-﻿﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eBazzar.Model
@@ -17,6 +17,12 @@ namespace eBazzar.Model
 
         [Column("RazorpayOrderId", TypeName = "varchar(255)")]
         public string? razorpay_order_id { get; set; }
+
+        [Column("RazorpayPaymentId", TypeName = "varchar(255)")]
+        public string? razorpay_payment_id { get; set; }
+
+        [Column("RazorpaySignature", TypeName = "varchar(255)")]
+        public string? razorpay_signature { get; set; }
 
         public int? user_id { get; set; }
 

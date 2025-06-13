@@ -7,7 +7,7 @@ namespace eBazzar.Services
     {
         Task<ServiceResponse<string>> addOrder(OrdersDTO getAllOrderDTO, int userId);
 
-        Task<List<OrdersDTO>> getAllOrders();
+        Task<ServiceResponse<List<OrdersDTO>>> getAllOrders();
 
        
     }

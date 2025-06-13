@@ -31,7 +31,8 @@ namespace eBazzar.Controllers
         [HttpGet]
         public async Task<IActionResult> getAllOrders()
         {
-            return Ok(await orderService.getAllOrders());
+            var result = await orderService.getAllOrders();
+            return Ok(result);
         }
 
     }

@@ -6,8 +6,8 @@
         public int? address_id { get; set; }
         public string? razorpay_order_id { get; set; }
         public decimal? total_price { get; set; }
-        public string? status { get; set; } = "Pending";
-        public DateTime createdAt { get; set; } = DateTime.Now;
+        public string? status { get; set; }
+        public DateTime createdAt { get; set; }
 
     }
 }

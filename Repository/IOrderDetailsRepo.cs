@@ -8,5 +8,7 @@ namespace eBazzar.Repository
         Task<OrderDetails>? addOrderDetails(OrderDetails orderDetails);
 
         Task<List<OrderDetails>> getOrderById(int userId);
+
+        Task<OrderDetails> getInvoiceData(string razorPayOrderId);
     }
 }

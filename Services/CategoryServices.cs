@@ -19,7 +19,6 @@ namespace eBazzar.Services
                 category_id = categoryDTO.category_id,
                 category_name = categoryDTO.category_name,
                 category_description = categoryDTO.category_description
-
             };
 
             await icategoryRepo.addCategory(result);

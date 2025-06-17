@@ -46,5 +46,12 @@ namespace eBazzar.Controllers
             }
             return Ok(response);
         }
+
+        [HttpDelete("{addressId}")]
+        public async Task<ActionResult> deleteAddress(int addressId)
+        {
+            var result = await addressService.deleteAsync(addressId);
+            return Ok(result);
+        }
     }
 }

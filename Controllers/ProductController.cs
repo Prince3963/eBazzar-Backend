@@ -45,12 +45,10 @@ namespace eBazzar.Controllers
             var result = await iserviceProduct.getElectronicProduct(category_id);
             if (result == null)
             {
-                return NotFound(new { message = "Electronic category not found, please check your controller", status = false });   
+                return NotFound(new { message = "Electronic category not found, please check your controller", status = false });
             }
             return Ok(result);
         }
-
-        
 
 
         [HttpPost]

@@ -38,5 +38,18 @@ namespace eBazzar.Controllers
             return Ok(result);
         }
 
+        [Authorize]
+        [HttpGet("getInvoiceData/{address_id}/{razorpay_order_id}")]
+        public async Task<IActionResult> getInvoiceData(int address_id, string razorpay_order_id)
+        {
+            var userId = int.Parse(User.FindFirst("user_id").Value ?? "0");
+            if (userId == null)
+            {
+                return null;
+            }
+
+            var result = await orderDetails.getInvoiceData(userId, address_id, razorpay_order_id);
+            return Ok(result);
+        }
     }
 }

@@ -57,7 +57,36 @@ namespace eBazzar.Services
             return response;
         }
 
-        
+        public async Task<ServiceResponse<string>> deleteAsync(int addressid)
+        {
+            var response = new ServiceResponse<string>();
+
+            if (addressid == null)
+            {
+                response.data = "0";
+                response.message = "address Id is requierd";
+                response.status = false;
+
+                return response;
+            }
+
+            var existAddress = await addressRepo.deleteAddress(addressid);
+            if (existAddress == null)
+            {
+                response.data = "0";
+                response.message = "Address not found";
+                response.status = false;
+            }
+            else
+            {
+                response.data = "1";
+                response.message = "Address deleted successfully";
+                response.status = true;
+            }
+
+            return response;
+        }
+
         public async Task<ServiceResponse<List<AddressDTO>>> GetByUserIdAsync(int userId)
         {
             

@@ -20,11 +20,34 @@ namespace eBazzar.Repository
             return address;
         }
 
+        public async Task<Address> deleteAddress(int addressId)
+        {
+            var existAddress = await dBContext.addresse.FirstOrDefaultAsync(a => a.address_id == addressId);
+            if (existAddress == null)
+            {
+                return null;
+            }
+
+            dBContext.addresse.Remove(existAddress);
+            await dBContext.SaveChangesAsync();
+            return existAddress;
+            
+        }
+
         public async Task<List<Address>> GetAddressById(int userId)
         {
             return await dBContext.addresse
                 .Where(a => a.user_id == userId)
                 .ToListAsync();
+        }
+        public async Task<Address> getAddressByAddressId(int address_id)
+        {
+            var existAddress = await dBContext.addresse.FirstOrDefaultAsync(a => a.address_id == address_id);
+            if(existAddress == null)
+            {
+                return null;
+            }
+            return existAddress;
         }
     }
 }

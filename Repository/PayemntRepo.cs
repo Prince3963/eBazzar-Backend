@@ -1,5 +1,7 @@
 ﻿using eBazzar.DBcontext;
 using eBazzar.Model;
+using Microsoft.EntityFrameworkCore;
+using Razorpay.Api;
 
 namespace eBazzar.Repository
 {
@@ -25,5 +27,7 @@ namespace eBazzar.Repository
                 throw;
             }
         }
+
+
     }
 }

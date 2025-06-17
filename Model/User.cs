@@ -29,6 +29,7 @@ namespace eBazzar.Model
 
         //[Column("UserImage", TypeName = "varchar(255)")]
         //public string? user_image { get; set; }
+
         [Column("UserisActive", TypeName = "varchar(10)")]
         public string? user_isActive { get; set; }
 
@@ -39,6 +40,5 @@ namespace eBazzar.Model
         public ICollection<Review>? reviews { get; set; }
         public ICollection<Orders>? orders { get; set; }
         public ICollection<Payments>? payments { get; set; }
-        //public ICollection<Address>? addresses { get; set; }
     }
 }

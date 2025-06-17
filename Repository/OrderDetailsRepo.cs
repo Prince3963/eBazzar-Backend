@@ -30,6 +30,20 @@ namespace eBazzar.Repository
 
             return orderDetailsList;
         }
+       
+
+        public async Task<OrderDetails> getInvoiceData(string razorPayOrderId)
+        {
+            try
+            {
+                var data = await dBContext.orderDetails.FirstOrDefaultAsync(i => i.razorpay_order_id == razorPayOrderId);
+                return data;
+            }catch(Exception ex)
+            {
+                Console.WriteLine("An error in repo getInvoice " + ex.Message);
+                throw;
+            }
+        }
 
     }
 }

@@ -9,5 +9,6 @@ namespace eBazzar.Services
     {
         Task<ServiceResponse<List<AddressDTO>>> GetByUserIdAsync(int userId);
         Task<ServiceResponse<string>> AddAsync(AddressDTO dto, int userId);
+        Task<ServiceResponse<string>> deleteAsync(int addressid);
     }
 }

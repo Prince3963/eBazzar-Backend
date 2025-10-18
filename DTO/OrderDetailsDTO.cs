@@ -10,6 +10,7 @@
         public int quantity { get; set; }
         public string product_image { get; set; }
         public string razorpay_order_id { get; set; }
+        public DateTime createdAt { get; set; }
 
     }
 }

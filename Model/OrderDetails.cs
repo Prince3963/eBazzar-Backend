@@ -25,6 +25,8 @@ namespace eBazzar.Model
         [Column("productImage", TypeName = "varchar(1000)")]
         public string? productImage { get; set; }
 
+
+
         public string razorpay_order_id { get; set; }
     }
 }

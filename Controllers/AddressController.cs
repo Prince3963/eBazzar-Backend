@@ -38,9 +38,8 @@ namespace eBazzar.Controllers
         public async Task<ActionResult<ServiceResponse<AddressDTO>>> Post([FromBody] AddressDTO dto)
         {
             var user_id = int.Parse(User.FindFirst("user_id").Value ?? "0");
-            //Console.WriteLine("user_id in controller:- " + user_id);
             var response = await addressService.AddAsync(dto, user_id);
-            if (!response.status == false)
+            if (response.status == false)
             {
                 return Unauthorized(response.message);
             }

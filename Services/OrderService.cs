@@ -30,15 +30,6 @@ namespace eBazzar.Services
                     return response;
                 }
 
-                //// Optional: check if order already exists
-                //var alreadyExist = await orderRepo.getOrderByRazorpayOrderId(OrdersDTO.razorpay_order_id);
-                //if (alreadyExist != null)
-                //{
-                //    response.message = "Order already exists";
-                //    response.status = false;
-                //    return response;
-                //}
-
                 var newOrder = new Orders
                 {
                     address_id = OrdersDTO.address_id,
@@ -46,7 +37,8 @@ namespace eBazzar.Services
                     user_id = userId,
                     total_price = OrdersDTO.total_price,
                     createdAt = DateTime.Now,
-                    status = OrdersDTO.status ?? "Pending"
+                    status = OrdersDTO.status ?? "Pending",
+                    
                 };
 
                 var insertedOrder = await orderRepo.addOrder(newOrder);

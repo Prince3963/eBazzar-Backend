@@ -41,7 +41,6 @@ public class EmailService : IEmailService
             Console.WriteLine($"Error sending email: {e.Message}");
             throw;
         }
-
     }
 
     //
